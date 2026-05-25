@@ -1,0 +1,10 @@
+{
+  "title": "NIVARO CRM // E-COMMERCE",
+  "tag": "Full Stack · E-commerce",
+  "desc": "Plataforma de e-commerce con storefront Next.js y API Express para gestión de órdenes en tiempo real. Panel admin multi-tenant con webhooks integrados para Mercado Libre y WhatsApp.",
+  "tags": ["Next.js", "Express", "React", "TypeScript", "Prisma", "Node.js"],
+  "color": "cyan",
+  "hue": "purple",
+  "url": "https://nivaro-frontend.vercel.app/",
+  "repoUrl": ""
+}
