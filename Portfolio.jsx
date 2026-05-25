@@ -873,7 +873,7 @@ function BuildSection() {
 // CONTACTO
 // ────────────────────────────────────────────────────────────────────────────
 // Reemplazá este ID con el tuyo de formspree.io/f/XXXXXXXX
-const FORMSPREE_ID = "YOUR_FORMSPREE_ID";
+const FORMSPREE_ID = "xqejddgn";
 
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", project: "", msg: "" });
