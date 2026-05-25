@@ -1,0 +1,9 @@
+{
+  "title": "TERRA FITNESS // VAL",
+  "tag": "Full Stack · SaaS",
+  "desc": "Plataforma SaaS de gestión para gimnasios. Auth JWT, panel de administración, pagos con Stripe, base de datos PostgreSQL con Prisma ORM. Next.js + TypeScript + Tailwind.",
+  "color": "pink",
+  "hue": "pink-cyan",
+  "url": "",
+  "repoUrl": ""
+}

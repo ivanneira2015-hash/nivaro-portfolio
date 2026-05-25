@@ -1,3 +1,8 @@
 projects/manifest.json
 .claude/
 .thumbnail
+**/.env
+**/.env.local
+**/.env*.local
+**/node_modules/
+**/.next/

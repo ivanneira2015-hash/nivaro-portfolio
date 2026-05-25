@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Fútbol & Burger | Canchas Premium + Hamburguesas Épicas</title>
+    <meta name="description" content="Canchas de fútbol 5 y 7 de primer nivel + hamburguesas increíbles. Ambiente familiar, precios accesibles, escuelita de fútbol. Reservá ahora.">
+    <meta name="keywords" content="canchas de fútbol, hamburguesas, fútbol 5, fútbol 7, escuelita de fútbol, tercer tiempo, canchas sintéticas">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Club Fútbol & Burger | Jugá, Comé y Viví el Fútbol">
+    <meta property="og:description" content="Canchas premium + hamburguesas épicas + el mejor ambiente de barrio. Reservá tu cancha ahora.">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tracking Placeholders -->
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <!-- Meta Pixel -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', 'XXXXXXXXXX');
+        fbq('track', 'PageView');
+    </script>
+
+    <style>
+        :root {
+            --bg: #0B0F0C;
+            --bg-light: #111811;
+            --bg-card: rgba(255,255,255,0.03);
+            --neon-green: #00FF88;
+            --neon-green-dim: rgba(0,255,136,0.15);
+            --orange: #FF7A00;
+            --orange-dim: rgba(255,122,0,0.15);
+            --text: #ffffff;
+            --text-muted: #9ca3af;
+            --glass: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        ::selection {
+            background: var(--neon-green);
+            color: var(--bg);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 4px; }
+
+        /* UTILITIES */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        .neon-text { color: var(--neon-green); text-shadow: 0 0 20px rgba(0,255,136,0.3); }
+        .orange-text { color: var(--orange); text-shadow: 0 0 20px rgba(255,122,0,0.3); }
+
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+            50% { box-shadow: 0 0 40px rgba(0,255,136,0.4); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(10px); opacity: 0.5; }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+        nav.scrolled {
+            background: rgba(11,15,12,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 0.7rem 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-logo i { color: var(--neon-green); font-size: 1.6rem; }
+        .nav-logo span { color: var(--neon-green); }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .nav-links a:hover { color: var(--neon-green); }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: var(--neon-green);
+            transition: width 0.3s;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            background: linear-gradient(135deg, var(--neon-green), #00cc6a);
+            color: var(--bg) !important;
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 20px rgba(0,255,136,0.3);
+            transition: all 0.3s !important;
+        }
+        .nav-cta::after { display: none !important; }
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,255,136,0.5);
+        }
+        .mobile-toggle {
+            display: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 7rem 1.5rem 4rem;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(180deg, rgba(11,15,12,0.3) 0%, rgba(11,15,12,0.95) 100%),
+                linear-gradient(135deg, rgba(0,255,136,0.05) 0%, rgba(255,122,0,0.05) 100%),
+                url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1920&q=80') center/cover;
+            z-index: -2;
+        }
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0,255,136,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,122,0,0.08) 0%, transparent 50%);
+            z-index: -1;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--neon-green);
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.8s ease;
+        }
+        .hero-badge i { animation: float 3s ease-in-out infinite; }
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--neon-green), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+        .btn {
+            padding: 1rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-green {
+            background: linear-gradient(135deg, var(--neon-green), #00cc6a);
+            color: var(--bg);
+            box-shadow: 0 8px 30px rgba(0,255,136,0.3);
+        }
+        .btn-green:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,255,136,0.5);
+        }
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        .btn-outline:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255,122,0,0.2);
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+        .h-stat { text-align: center; }
+        .h-stat-num {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--neon-green);
+            text-shadow: 0 0 20px rgba(0,255,136,0.3);
+        }
+        .h-stat-label { font-size: 0.85rem; color: var(--text-muted); }
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            animation: bounceDown 2s infinite;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .scroll-indicator i { font-size: 1.2rem; color: var(--neon-green); }
+
+        /* SECTIONS */
+        section { padding: 5rem 0; }
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+        }
+        .section-tag {
+            display: inline-block;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.8rem;
+        }
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .section-sub {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* REVIEWS */
+        .reviews { background: var(--bg-light); }
+        .reviews-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 0 1.5rem 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .reviews-scroll::-webkit-scrollbar { display: none; }
+        .review-card {
+            min-width: 320px;
+            max-width: 350px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.8rem;
+            scroll-snap-align: start;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+        .review-card:hover {
+            border-color: rgba(0,255,136,0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .review-stars {
+            color: var(--orange);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .review-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+            font-style: italic;
+        }
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .review-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-green), var(--orange));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; color: var(--bg);
+        }
+        .review-info h4 { font-size: 0.95rem; font-weight: 600; }
+        .review-info span { font-size: 0.8rem; color: var(--text-muted); }
+        .google-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        .google-rating i { color: #4285F4; }
+
+        /* FEATURES */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-green), var(--orange));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0,255,136,0.15);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 40px rgba(0,255,136,0.05);
+        }
+        .feature-icon {
+            width: 70px; height: 70px;
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.2rem;
+            font-size: 1.8rem;
+            position: relative;
+        }
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            opacity: 0.15;
+        }
+        .icon-green { color: var(--neon-green); }
+        .icon-green::after { background: var(--neon-green); }
+        .icon-orange { color: var(--orange); }
+        .icon-orange::after { background: var(--orange); }
+        .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+        /* EXPERIENCE */
+        .experience { background: var(--bg-light); }
+        .exp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            align-items: center;
+        }
+        .exp-text h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+        .exp-text p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        .exp-list { list-style: none; }
+        .exp-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .exp-list li i {
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            width: 24px;
+        }
+        .exp-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+        }
+        .exp-image img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .exp-image:hover img { transform: scale(1.05); }
+        .exp-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            pointer-events: none;
+        }
+        .exp-image::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(11,15,12,0.8), transparent);
+            z-index: 1;
+        }
+
+        /* MENU */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .menu-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .menu-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,122,0,0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .menu-img {
+            width: 100%;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            position: relative;
+        }
+        .menu-img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .menu-card:hover .menu-img img { transform: scale(1.1); }
+        .menu-badge {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: var(--orange);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .menu-body { padding: 1.5rem; }
+        .menu-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .menu-body p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5; }
+        .menu-price {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--neon-green);
+        }
+        .menu-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        /* BOOKING */
+        .booking { background: var(--bg-light); }
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            align-items: start;
+        }
+        .booking-info h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .booking-info > p { color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+        .field-type {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .field-type:hover {
+            border-color: var(--neon-green);
+            background: rgba(0,255,136,0.03);
+        }
+        .field-type i {
+            width: 50px; height: 50px;
+            border-radius: 14px;
+            background: var(--neon-green-dim);
+            color: var(--neon-green);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .field-type div h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+        .field-type div p { font-size: 0.85rem; color: var(--text-muted); }
+        .field-type .price-tag {
+            margin-left: auto;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+        .booking-form {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+        }
+        .booking-form h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0,255,136,0.1);
+        }
+        .form-group input::placeholder { color: rgba(255,255,255,0.2); }
+        .form-group select option { background: var(--bg); color: white; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .btn-full { width: 100%; justify-content: center; }
+
+        /* GALLERY */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(11,15,12,0.7), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+        .gallery-item span {
+            position: absolute;
+            bottom: 1rem; left: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: white;
+        }
+        .gallery-item:hover span { opacity: 1; }
+        .g-tall { grid-row: span 2; }
+        .g-wide { grid-column: span 2; }
+
+        /* FINAL CTA */
+        .final-cta {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 6rem 1.5rem;
+        }
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(0,255,136,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(255,122,0,0.08) 0%, transparent 50%);
+            z-index: -1;
+        }
+        .final-cta h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+        .final-cta p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        .final-cta .btn { font-size: 1.1rem; padding: 1.1rem 2.5rem; }
+
+        /* FOOTER */
+        footer {
+            background: #080a08;
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 1.5rem 2rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+        }
+        .footer-brand .nav-logo { margin-bottom: 1rem; display: inline-flex; }
+        .footer-brand p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .socials { display: flex; gap: 0.8rem; }
+        .socials a {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+        .socials a:hover {
+            background: var(--neon-green);
+            color: var(--bg);
+            border-color: var(--neon-green);
+            transform: translateY(-3px);
+        }
+        .footer-col h4 { font-size: 1rem; margin-bottom: 1.2rem; color: white; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.7rem; }
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: var(--neon-green); }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* FLOATING WHATSAPP */
+        .float-wa {
+            position: fixed;
+            bottom: 1.5rem; right: 1.5rem;
+            width: 60px; height: 60px;
+            background: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 30px rgba(37,211,102,0.3);
+            z-index: 999;
+            text-decoration: none;
+            transition: all 0.3s;
+            animation: float 3s ease-in-out infinite;
+        }
+        .float-wa:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(37,211,102,0.5);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 968px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .exp-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .booking-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .g-tall { grid-row: span 1; }
+            .g-wide { grid-column: span 1; }
+        }
+        @media (max-width: 640px) {
+            .hero-stats { gap: 1.5rem; }
+            .h-stat-num { font-size: 1.6rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .menu-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .review-card { min-width: 280px; }
+            section { padding: 3.5rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <i class="fas fa-futbol"></i>
+            Club <span>F&B</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#canchas">Canchas</a></li>
+            <li><a href="#menu">Menú</a></li>
+            <li><a href="#galeria">Galería</a></li>
+            <li><a href="#reservar" class="nav-cta">Reservar</a></li>
+        </ul>
+        <button class="mobile-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+    <div class="hero-bg"></div>
+    <div class="hero-particles"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-fire"></i> El mejor ambiente de barrio
+        </div>
+        <h1>
+            Jugá, Comé y Viví<br>el Fútbol <span class="highlight">como Nunca</span>
+        </h1>
+        <p class="hero-sub">
+            Canchas de primer nivel + hamburguesas increíbles + el mejor ambiente de barrio. 
+            Todo en un solo lugar.
+        </p>
+        <div class="hero-buttons">
+            <a href="#reservar" class="btn btn-green">
+                <i class="fas fa-calendar-check"></i> Reservar cancha
+            </a>
+            <a href="#menu" class="btn btn-outline">
+                <i class="fas fa-utensils"></i> Ver menú
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="h-stat">
+                <div class="h-stat-num">4.9</div>
+                <div class="h-stat-label">⭐ en Google</div>
+            </div>
+            <div class="h-stat">
+                <div class="h-stat-num">2</div>
+                <div class="h-stat-label">Canchas premium</div>
+            </div>
+            <div class="h-stat">
+                <div class="h-stat-num">+500</div>
+                <div class="h-stat-label">Partidos por mes</div>
+            </div>
+        </div>
+    </div>
+    <a href="#reviews" class="scroll-indicator">
+        <span>Descubrí más</span>
+        <i class="fas fa-chevron-down"></i>
+    </a>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+    <div class="section-header animate-on-scroll">
+        <span class="section-tag">Testimonios</span>
+        <h2 class="section-title">Lo que dicen los que ya vinieron</h2>
+        <p class="section-sub">Más de 200 equipos y familias nos eligen todos los meses.</p>
+        <div class="google-rating">
+            <i class="fab fa-google"></i>
+            <span>4.9 estrellas en Google Reviews</span>
+        </div>
+    </div>
+    <div class="reviews-scroll">
+        <div class="review-card animate-on-scroll delay-1">
+            <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">"Excelentes canchas y muy buena atención. El césped sintético está impecable, se nota que le meten mantenimiento. Vamos todos los jueves con el equipo."</p>
+            <div class="review-author">
+                <div class="review-avatar">MR</div>
+                <div class="review-info">
+                    <h4>Matías R.</h4>
+                    <span>Equipo Los Pibes · Hace 2 semanas</span>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-on-scroll delay-2">
+            <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">"Hamburguesas deliciosas y súper económicas. Después del partido nos quedamos a comer y la verdad que la calidad es de restaurante. La doble cheddar es otro nivel."</p>
+            <div class="review-author">
+                <div class="review-avatar">LF</div>
+                <div class="review-info">
+                    <h4>Lucas F.</h4>
+                    <span>Cliente frecuente · Hace 1 mes</span>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-on-scroll delay-3">
+            <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">"Ambiente familiar, siempre volvemos. Llevamos a los chicos a la escuelita de fútbol y mientras los profes entrenan, nosotros disfrutamos de una birra y una burger."</p>
+            <div class="review-author">
+                <div class="review-avatar">PG</div>
+                <div class="review-info">
+                    <h4>Paula G.</h4>
+                    <span>Mamá de la escuelita · Hace 3 semanas</span>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-on-scroll delay-1">
+            <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">"Precios accesibles y un lugar para disfrutar con amigos. La cancha de 7 es enorme y tiene buena iluminación. El tercer tiempo después del partido es lo mejor de la semana."</p>
+            <div class="review-author">
+                <div class="review-avatar">DS</div>
+                <div class="review-info">
+                    <h4>Diego S.</h4>
+                    <span>Capitán FC Central · Hace 5 días</span>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-on-scroll delay-2">
+            <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">"La escuelita de fútbol tiene profes geniales. Mi hijo aprendió una banda en solo 3 meses. Se nota que les gusta lo que hacen y los chicos lo disfrutan."</p>
+            <div class="review-author">
+                <div class="review-avatar">AM</div>
+                <div class="review-info">
+                    <h4>Ana M.</h4>
+                    <span>Mamá de Thiago · Hace 2 meses</span>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-on-scroll delay-3">
+            <div class="review-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="review-text">"Siempre mejorando. Cada vez que vengo hay algo nuevo: más variedad en el menú, mejoras en las canchas, nuevos horarios. Se nota que les importa el cliente."</p>
+            <div class="review-author">
+                <div class="review-avatar">JN</div>
+                <div class="review-info">
+                    <h4>Julián N.</h4>
+                    <span>Jugador amateur · Hace 1 semana</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="canchas">
+    <div class="section-header animate-on-scroll">
+        <span class="section-tag">Todo incluido</span>
+        <h2 class="section-title">¿Por qué elegirnos?</h2>
+        <p class="section-sub">Un lugar pensado para que disfrutes del fútbol y la buena comida sin preocupaciones.</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card animate-on-scroll delay-1">
+            <div class="feature-icon icon-green"><i class="fas fa-futbol"></i></div>
+            <h3>Canchas de calidad</h3>
+            <p>Césped sintético de última generación, iluminación LED profesional y medidas reglamentarias. Canchas de 5 y 7 listas para jugar.</p>
+        </div>
+        <div class="feature-card animate-on-scroll delay-2">
+            <div class="feature-icon icon-orange"><i class="fas fa-hamburger"></i></div>
+            <h3>Hamburguesas épicas</h3>
+            <p>Carne jugosa, pan casero y toppings que te vuelan la cabeza. Del tercer tiempo no te vas con hambre.</p>
+        </div>
+        <div class="feature-card animate-on-scroll delay-3">
+            <div class="feature-icon icon-green"><i class="fas fa-users"></i></div>
+            <h3>Ambiente familiar</h3>
+            <p>Un espacio seguro y cálido donde chicos y grandes se sienten como en casa. Buena onda garantizada.</p>
+        </div>
+        <div class="feature-card animate-on-scroll delay-1">
+            <div class="feature-icon icon-orange"><i class="fas fa-tags"></i></div>
+            <h3>Precios accesibles</h3>
+            <p>Jugá y comé sin romper el chanchito. Promos especiales para equipos, cumpleaños y eventos.</p>
+        </div>
+        <div class="feature-card animate-on-scroll delay-2">
+            <div class="feature-icon icon-green"><i class="fas fa-child"></i></div>
+            <h3>Escuelita de fútbol</h3>
+            <p>Profesores capacitados, metodología divertida y grupos por edad. Formamos jugadores y valores.</p>
+        </div>
+        <div class="feature-card animate-on-scroll delay-3">
+            <div class="feature-icon icon-orange"><i class="fas fa-beer"></i></div>
+            <h3>Tercer tiempo asegurado</h3>
+            <p>Birra bien fría, hamburguesas recién hechas y el mejor ambiente para festejar la victoria (o la derrota).</p>
+        </div>
+    </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience">
+    <div class="exp-grid">
+        <div class="exp-text animate-on-scroll">
+            <span class="section-tag">La experiencia</span>
+            <h2>Más que una cancha,<br>un lugar donde se arma <span class="neon-text">el tercer tiempo perfecto</span></h2>
+            <p>Vení a jugar un partido con los amigos, traé a los chicos a la escuelita o celebrá un cumpleaños diferente. Después, quedate a disfrutar de nuestras hamburguesas artesanales y birras bien frías.</p>
+            <ul class="exp-list">
+                <li><i class="fas fa-check-circle"></i> Canchas techadas con iluminación LED</li>
+                <li><i class="fas fa-check-circle"></i> Vestuarios limpios y amplios</li>
+                <li><i class="fas fa-check-circle"></i> Parrilla y buffet para eventos</li>
+                <li><i class="fas fa-check-circle"></i> Estacionamiento privado</li>
+                <li><i class="fas fa-check-circle"></i> WiFi gratis y música en vivo</li>
+            </ul>
+            <a href="#reservar" class="btn btn-green" style="margin-top:1rem">
+                <i class="fas fa-calendar-check"></i> Reservar ahora
+            </a>
+        </div>
+        <div class="exp-image animate-on-scroll delay-2">
+            <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&q=80" alt="Amigos jugando al fútbol">
+        </div>
+    </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+    <div class="section-header animate-on-scroll">
+        <span class="section-tag">Nuestra carta</span>
+        <h2 class="section-title">Burgers que hacen <span class="orange-text">gol</span></h2>
+        <p class="section-sub">Hechas con carne fresca, pan casero y mucha pasión. El complemento perfecto para tu partido.</p>
+    </div>
+    <div class="menu-grid">
+        <div class="menu-card animate-on-scroll delay-1">
+            <div class="menu-img">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Doble Cheddar">
+                <span class="menu-badge">MÁS VENDIDA</span>
+            </div>
+            <div class="menu-body">
+                <h3>Doble Cheddar Smash</h3>
+                <p>Doble medallón smash, doble cheddar, cebolla caramelizada y salsa especial.</p>
+                <div class="menu-price">$3.500</div>
+            </div>
+        </div>
+        <div class="menu-card animate-on-scroll delay-2">
+            <div class="menu-img">
+                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&q=80" alt="Bacon Burger">
+            </div>
+            <div class="menu-body">
+                <h3>Bacon Explosion</h3>
+                <p>Medallón de 180g, bacon crispy, cheddar, huevo a la plancha y BBQ.</p>
+                <div class="menu-price">$3.900</div>
+            </div>
+        </div>
+        <div class="menu-card animate-on-scroll delay-3">
+            <div class="menu-img">
+                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80" alt="Clásica">
+            </div>
+            <div class="menu-body">
+                <h3>La Clásica del Barrio</h3>
+                <p>Lechuga, tomate, cebolla, aderezo casero y carne jugosa. Simple y perfecta.</p>
+                <div class="menu-price">$2.800</div>
+            </div>
+        </div>
+        <div class="menu-card animate-on-scroll delay-1">
+            <div class="menu-img">
+                <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&q=80" alt="Veggie">
+                <span class="menu-badge">VEGGIE</span>
+            </div>
+            <div class="menu-body">
+                <h3>Green Power</h3>
+                <p>Medallón de lentejas y quinoa, palta, rúcula y mayonesa de wasabi.</p>
+                <div class="menu-price">$3.200</div>
+            </div>
+        </div>
+    </div>
+    <div class="menu-footer animate-on-scroll">
+        <a href="https://wa.me/5491123456789?text=Hola! Quiero ver el menú completo" class="btn btn-outline" target="_blank">
+            <i class="fas fa-book-open"></i> Ver menú completo
+        </a>
+    </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="reservar">
+    <div class="section-header animate-on-scroll">
+        <span class="section-tag">Reservas</span>
+        <h2 class="section-title">Reservá tu cancha <span class="neon-text">ahora</span></h2>
+        <p class="section-sub">Elegí tu cancha, horario y listo. Te confirmamos al instante por WhatsApp.</p>
+    </div>
+    <div class="booking-grid">
+        <div class="booking-info animate-on-scroll">
+            <h2>Elegí tu cancha</h2>
+            <p>Todas nuestras canchas tienen césped sintético de alta densidad, iluminación LED profesional y están en perfectas condiciones.</p>
+
+            <div class="field-type">
+                <i class="fas fa-futbol"></i>
+                <div>
+                    <h4>Cancha de Fútbol 5</h4>
+                    <p>Ideal para partidos rápidos y técnicos</p>
+                </div>
+                <div class="price-tag">$8.000/hr</div>
+            </div>
+            <div class="field-type">
+                <i class="fas fa-futbol"></i>
+                <div>
+                    <h4>Cancha de Fútbol 7</h4>
+                    <p>Más espacio, más juego, más diversión</p>
+                </div>
+                <div class="price-tag">$12.000/hr</div>
+            </div>
+            <div class="field-type">
+                <i class="fas fa-child"></i>
+                <div>
+                    <h4>Escuelita de Fútbol</h4>
+                    <p>Lunes y miércoles · Grupos por edad</p>
+                </div>
+                <div class="price-tag">Consultar</div>
+            </div>
+            <div class="field-type">
+                <i class="fas fa-birthday-cake"></i>
+                <div>
+                    <h4>Cumpleaños / Eventos</h4>
+                    <p>Cancha + buffet + animación incluida</p>
+                </div>
+                <div class="price-tag">Pack</div>
+            </div>
+        </div>
+
+        <form class="booking-form animate-on-scroll delay-2" onsubmit="handleBooking(event)">
+            <h3><i class="fab fa-whatsapp" style="color:#25D366"></i> Reservá por WhatsApp</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="tel">Teléfono</label>
+                    <input type="tel" id="tel" placeholder="11 2345-6789" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cancha">Tipo de cancha</label>
+                <select id="cancha" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="f5">Fútbol 5</option>
+                    <option value="f7">Fútbol 7</option>
+                    <option value="escuelita">Escuelita de Fútbol</option>
+                    <option value="evento">Cumpleaños / Evento</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="hora">Horario</label>
+                    <select id="hora" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                        <option value="21:00">21:00</option>
+                        <option value="22:00">22:00</option>
+                        <option value="23:00">23:00</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="notas">Notas adicionales</label>
+                <textarea id="notas" rows="3" placeholder="Cantidad de jugadores, nombre del equipo, etc."></textarea>
+            </div>
+            <button type="submit" class="btn btn-green btn-full">
+                <i class="fab fa-whatsapp"></i> Enviar reserva por WhatsApp
+            </button>
+            <p style="text-align:center; margin-top:1rem; font-size:0.8rem; color:var(--text-muted)">
+                Te respondemos en menos de 10 minutos
+            </p>
+        </form>
+    </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="galeria">
+    <div class="section-header animate-on-scroll">
+        <span class="section-tag">Galería</span>
+        <h2 class="section-title">Así se vive el <span class="highlight">Club F&B</span></h2>
+        <p class="section-sub">Fútbol, amigos, comida y buenos momentos. Todo en un solo lugar.</p>
+    </div>
+    <div class="gallery-grid">
+        <div class="gallery-item g-tall animate-on-scroll">
+            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80" alt="Cancha de noche">
+            <span>Cancha iluminada</span>
+        </div>
+        <div class="gallery-item animate-on-scroll delay-1">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Hamburguesa">
+            <span>Doble Cheddar</span>
+        </div>
+        <div class="gallery-item animate-on-scroll delay-2">
+            <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=600&q=80" alt="Jugando">
+            <span>Partido de amigos</span>
+        </div>
+        <div class="gallery-item g-wide animate-on-scroll delay-1">
+            <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&q=80" alt="Equipo">
+            <span>El tercer tiempo</span>
+        </div>
+        <div class="gallery-item animate-on-scroll">
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80" alt="Burger close">
+            <span>Calidad premium</span>
+        </div>
+        <div class="gallery-item g-tall animate-on-scroll delay-2">
+            <img src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=600&q=80" alt="Cancha aérea">
+            <span>Vista panorámica</span>
+        </div>
+        <div class="gallery-item animate-on-scroll delay-1">
+            <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80" alt="Niños jugando">
+            <span>Escuelita</span>
+        </div>
+        <div class="gallery-item animate-on-scroll delay-3">
+            <img src="https://images.unsplash.com/photo-1574966739987-65e38db0f7ce?w=600&q=80" alt="Cervezas">
+            <span>Birras bien frías</span>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+    <div class="animate-on-scroll">
+        <h2>El partido termina…<br>pero la experiencia <span class="neon-text">recién empieza</span></h2>
+        <p>No esperes más. Reservá tu cancha, invitá a los amigos y vení a vivir el mejor tercer tiempo del barrio.</p>
+        <a href="#reservar" class="btn btn-green" style="animation: glow 2s ease-in-out infinite">
+            <i class="fas fa-calendar-check"></i> Reservar ahora
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <a href="#" class="nav-logo">
+                <i class="fas fa-futbol"></i>
+                Club <span>F&B</span>
+            </a>
+            <p>Canchas de fútbol premium + hamburguesas épicas + el mejor ambiente de barrio. Vení a jugar, quedate a comer.</p>
+            <div class="socials">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="https://wa.me/5491123456789"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#canchas">Canchas</a></li>
+                <li><a href="#menu">Menú</a></li>
+                <li><a href="#galeria">Galería</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Servicios</h4>
+            <ul>
+                <li><a href="#reservar">Reservar cancha</a></li>
+                <li><a href="#">Escuelita de fútbol</a></li>
+                <li><a href="#">Cumpleaños</a></li>
+                <li><a href="#">Eventos corporativos</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Contacto</h4>
+            <ul>
+                <li><a href="https://wa.me/5491123456789">WhatsApp</a></li>
+                <li><a href="tel:+541123456789">11 2345-6789</a></li>
+                <li><a href="#">Dirección del club</a></li>
+                <li><a href="#">Horarios</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p> 2026 Club F&B. Todos los derechos reservados. Diseñado para ganar.</p>
+    </div>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/5491123456789" class="float-wa" target="_blank" title="Reservar por WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    // Mobile menu
+    function toggleMenu() {
+        const links = document.querySelector('.nav-links');
+        if (links.style.display === 'flex') {
+            links.style.display = 'none';
+        } else {
+            links.style.display = 'flex';
+            links.style.position = 'absolute';
+            links.style.top = '100%';
+            links.style.left = '0';
+            links.style.right = '0';
+            links.style.flexDirection = 'column';
+            links.style.background = 'rgba(11,15,12,0.98)';
+            links.style.padding = '2rem';
+            links.style.gap = '1.5rem';
+            links.style.backdropFilter = 'blur(20px)';
+        }
+    }
+
+    // Booking form → WhatsApp
+    function handleBooking(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const tel = document.getElementById('tel').value;
+        const cancha = document.getElementById('cancha');
+        const canchaText = cancha.options[cancha.selectedIndex].text;
+        const fecha = document.getElementById('fecha').value;
+        const hora = document.getElementById('hora').value;
+        const notas = document.getElementById('notas').value;
+
+        const msg = `Hola! Quiero reservar una cancha.%0A%0A` +
+                    `*Nombre:* ${nombre}%0A` +
+                    `*Teléfono:* ${tel}%0A` +
+                    `*Cancha:* ${canchaText}%0A` +
+                    `*Fecha:* ${fecha}%0A` +
+                    `*Horario:* ${hora}%0A` +
+                    (notas ? `*Notas:* ${notas}` : '');
+
+        window.open(`https://wa.me/5491123456789?text=${msg}`, '_blank');
+
+        // Track conversion
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'conversion', { event_category: 'booking', event_label: 'whatsapp_form' });
+        }
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'Lead');
+        }
+    }
+
+    // Set min date to today
+    const dateInput = document.getElementById('fecha');
+    if (dateInput) {
+        dateInput.min = new Date().toISOString().split('T')[0];
+    }
+</script>
+
+</body>
+</html>
