@@ -779,13 +779,18 @@ function ProjectsSection({ projects }) {
                 className="project-card hover-target p-6 md:p-7 flex flex-col group"
                 style={{ minHeight: "440px", cursor: p.url ? "pointer" : "default" }}
               >
-                <div className="relative h-44 mb-6 overflow-hidden" style={{ background: p.hue }}>
+                <div className="relative h-44 mb-6 overflow-hidden" style={{ background: p.image ? "#0A0A0F" : p.hue }}>
+                  {p.image && (
+                    <img src={p.image} alt={p.title} className="absolute inset-0 w-full h-full object-cover" />
+                  )}
                   <div className="absolute inset-0 opacity-30" style={{
                     backgroundImage: "repeating-linear-gradient(to bottom, rgba(0,0,0,0.4) 0px, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 3px)"
                   }}></div>
-                  <div className="absolute inset-0 flex items-center justify-center font-display text-7xl text-white/20 group-hover:text-white/40 transition-colors">
-                    {p.n}
-                  </div>
+                  {!p.image && (
+                    <div className="absolute inset-0 flex items-center justify-center font-display text-7xl text-white/20 group-hover:text-white/40 transition-colors">
+                      {p.n}
+                    </div>
+                  )}
                   <div className="absolute top-3 left-3 text-[10px] tracking-[0.3em] text-white/80">{p.tag}</div>
                   {p.url && (
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.45)" }}>
@@ -1308,6 +1313,7 @@ function AdminPanel({ projects, setProjects, onClose }) {
       hue: HUES[0].value,
       url: "",
       repoUrl: "",
+      image: "",
     });
   };
 
@@ -1524,6 +1530,45 @@ function AdminPanel({ projects, setProjects, onClose }) {
             </div>
           </div>
 
+          {/* Imagen */}
+          <div>
+            <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ IMAGEN DEL PROYECTO</label>
+            <input
+              className="cyber-input mb-2"
+              type="url"
+              value={draft.image || ""}
+              onChange={(e) => setDraft({ ...draft, image: e.target.value })}
+              placeholder="https://... (URL de imagen)"
+            />
+            <label className="hover-target flex items-center justify-center gap-2 border border-dashed border-[var(--cyan)]/40 h-10 text-[10px] tracking-[0.3em] text-[var(--text)]/50 hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors" style={{ cursor: "pointer" }}>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = (ev) => setDraft({ ...draft, image: ev.target.result });
+                  reader.readAsDataURL(file);
+                }}
+              />
+              <Icon name="download" size={14} /> SUBIR DESDE DISCO
+            </label>
+            {draft.image && (
+              <div className="relative mt-2 h-28 overflow-hidden border border-[var(--text)]/15">
+                <img src={draft.image} alt="" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setDraft({ ...draft, image: "" })}
+                  className="hover-target absolute top-1 right-1 w-6 h-6 bg-[var(--dark)]/80 flex items-center justify-center text-[var(--pink)] hover:bg-[var(--pink)] hover:text-[var(--dark)] transition-colors"
+                >
+                  <Icon name="close" size={10} />
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Live preview */}
           <div>
             <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ PREVIEW</label>
@@ -1650,29 +1695,41 @@ function AdminPanel({ projects, setProjects, onClose }) {
 // ────────────────────────────────────────────────────────────────────────────
 function App() {
   const [adminOpen, setAdminOpen] = useState(false);
-  const [adminProjects, setAdminProjects] = useState(() => {
+
+  // Unified projects state — starts from localStorage, merges manifest on load
+  const [projects, setProjectsState] = useState(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) { /* ignore */ }
-    return [];
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch {}
+    return null; // null = not loaded yet, wait for manifest
   });
-  const [manifestProjects, setManifestProjects] = useState([]);
 
   useEffect(() => {
     fetch("/projects/manifest.json")
       .then((r) => (r.ok ? r.json() : []))
-      .then((data) => setManifestProjects(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .then((manifest) => {
+        setProjectsState((current) => {
+          if (!current) {
+            // First time — use manifest (or defaults if manifest empty)
+            return manifest.length > 0 ? manifest : DEFAULT_PROJECTS;
+          }
+          // Add any new manifest projects not already tracked in stored list
+          const storedFolders = new Set(current.filter((p) => p.folder).map((p) => p.folder));
+          const fresh = manifest.filter((p) => !storedFolders.has(p.folder));
+          return fresh.length > 0 ? [...fresh, ...current] : current;
+        });
+      })
+      .catch(() => setProjectsState((c) => c || DEFAULT_PROJECTS));
   }, []);
 
-  const allProjects =
-    manifestProjects.length > 0 || adminProjects.length > 0
-      ? [...manifestProjects, ...adminProjects]
-      : DEFAULT_PROJECTS;
+  const updateProjects = (next) => {
+    setProjectsState(next);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  };
+
+  const displayProjects = projects || DEFAULT_PROJECTS;
 
   return (
     <div className="relative bg-[var(--dark)] text-[var(--text)]">
@@ -1680,14 +1737,14 @@ function App() {
       <Nav />
       <HeroSection />
       <AboutSection />
-      <ProjectsSection projects={allProjects} />
+      <ProjectsSection projects={displayProjects} />
       <BuildSection />
       <ContactSection />
       {!adminOpen && <AdminButton onClick={() => setAdminOpen(true)} isOpen={false} />}
       {adminOpen && (
         <AdminPanel
-          projects={adminProjects}
-          setProjects={setAdminProjects}
+          projects={displayProjects}
+          setProjects={updateProjects}
           onClose={() => setAdminOpen(false)}
         />
       )}
