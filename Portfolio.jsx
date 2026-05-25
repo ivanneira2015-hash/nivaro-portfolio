@@ -326,6 +326,15 @@ function HeroSection() {
               <span>Ver_Proyectos</span>
               <span className="bounce-arrow">↓</span>
             </a>
+            <a
+              href="uploads/Full_Stack_Developer_walter_neira.pdf"
+              download="Walter_Neira_CV.pdf"
+              className="group flex items-center gap-3 text-[11px] tracking-[0.4em] uppercase border border-[var(--cyan)] px-6 py-4 hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+              style={{ boxShadow: "0 0 24px rgba(0,229,255,0.2)" }}
+            >
+              <Icon name="download" size={15} />
+              <span>Descargar_CV</span>
+            </a>
             <a href="#contact" className="text-[11px] tracking-[0.4em] uppercase text-[var(--text)]/70 hover:text-[var(--cyan)] py-4 border-b border-transparent hover:border-[var(--cyan)] transition-all">
               Enviar_Mensaje →
             </a>
@@ -526,7 +535,19 @@ function AboutSection() {
                 ))}
               </div>
 
-              <div className="mt-6 pt-5 border-t border-[var(--text)]/10">
+              <div className="mt-5 pt-5 border-t border-[var(--text)]/10">
+                <a
+                  href="uploads/Full_Stack_Developer_walter_neira.pdf"
+                  download="Walter_Neira_CV.pdf"
+                  className="hover-target flex items-center justify-center gap-3 w-full py-3 border border-[var(--cyan)]/60 text-[var(--cyan)] text-[10px] tracking-[0.3em] uppercase hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+                  style={{ boxShadow: "0 0 14px rgba(0,229,255,0.15)" }}
+                >
+                  <Icon name="download" size={13} />
+                  Descargar CV
+                </a>
+              </div>
+
+              <div className="mt-5 pt-5 border-t border-[var(--text)]/10">
                 <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-3">MATRIZ.HABILIDADES</div>
                 {[
                   ["Frontend / React", 92],
