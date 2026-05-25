@@ -10,6 +10,7 @@
   <meta property="og:description" content="Desarrollador Full Stack en Argentina. React · Node.js · TypeScript · PostgreSQL." />
   <meta property="og:type" content="website" />
   <title>Nivaro — Walter Neira · Full Stack Developer</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -228,6 +229,8 @@
       text-transform: uppercase;
       transition: all 0.25s ease;
     }
+    /* Fallback: si GSAP no anima, los badges siguen visibles */
+    .skill-badge { opacity: 1 !important; }
     .skill-badge:hover {
       border-color: var(--pink);
       background: rgba(255,45,120,0.08);

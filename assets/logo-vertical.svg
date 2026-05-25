@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" width="240" height="280">
+  <defs>
+    <linearGradient id="gN2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF2D78"></stop>
+      <stop offset="100%" stop-color="#00E5FF"></stop>
+    </linearGradient>
+    <linearGradient id="gLine2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF2D78" stop-opacity="0"></stop>
+      <stop offset="50%" stop-color="#FF2D78"></stop>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"></stop>
+    </linearGradient>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="1.6" result="b"></feGaussianBlur>
+      <feMerge>
+        <feMergeNode in="b"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+
+
+  
+  <g transform="translate(80, 30)" filter="url(#glow2)">
+    <path d="M4 14 V4 H14" fill="none" stroke="#FF2D78" stroke-width="2.5" stroke-linecap="square"></path>
+    <path d="M66 4 H76 V14" fill="none" stroke="#FF2D78" stroke-width="2.5" stroke-linecap="square"></path>
+    <path d="M76 66 V76 H66" fill="none" stroke="#00E5FF" stroke-width="2.5" stroke-linecap="square"></path>
+    <path d="M14 76 H4 V66" fill="none" stroke="#00E5FF" stroke-width="2.5" stroke-linecap="square"></path>
+
+    <line x1="22" y1="22" x2="22" y2="58" stroke="#FF2D78" stroke-width="5.5" stroke-linecap="square"></line>
+    <line x1="22" y1="22" x2="58" y2="58" stroke="url(#gN2)" stroke-width="5.5" stroke-linecap="square"></line>
+    <line x1="58" y1="22" x2="58" y2="58" stroke="#00E5FF" stroke-width="5.5" stroke-linecap="square"></line>
+
+    <circle cx="58" cy="22" r="3" fill="#FF2D78"></circle>
+    <circle cx="22" cy="58" r="3" fill="#00E5FF"></circle>
+  </g>
+
+  
+  <text x="120" y="160" font-family="&#39;JetBrains Mono&#39;, &#39;Courier New&#39;, monospace" font-size="9" letter-spacing="6" fill="#00E5FF" text-anchor="middle">// W.NEIRA</text>
+
+  
+  <text x="120" y="208" font-family="&#39;Bebas Neue&#39;, &#39;Impact&#39;, sans-serif" font-size="56" letter-spacing="8" fill="#E8E8F0" text-anchor="middle" filter="url(#glow2)">NIVARO</text>
+
+  
+  <line x1="40" y1="222" x2="200" y2="222" stroke="url(#gLine2)" stroke-width="1"></line>
+
+  
+  <text x="120" y="245" font-family="&#39;JetBrains Mono&#39;, monospace" font-size="8" letter-spacing="5" fill="#E8E8F0" opacity="0.45" text-anchor="middle">FULL_STACK · 2026</text>
+</svg>

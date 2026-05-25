@@ -195,12 +195,8 @@ function Nav() {
 
   return (
     <nav ref={navRef} className="nav-blur fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 flex items-center justify-between">
-      <a href="#hero" className="flex items-center gap-2 group">
-        <div className="w-2.5 h-2.5 rounded-full bg-[var(--pink)]" style={{ boxShadow: "0 0 12px var(--pink)" }}></div>
-        <div className="flex flex-col leading-none">
-          <span className="font-display text-xl tracking-[0.25em]">NIVARO</span>
-          <span className="text-[8px] tracking-[0.4em] text-[var(--cyan)] opacity-70 mt-0.5">// W.NEIRA</span>
-        </div>
+      <a href="#hero" className="flex items-center group">
+        <img src="/assets/logo.svg" alt="NIVARO" style={{ height: "44px", width: "auto" }} />
       </a>
       <ul className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.25em] uppercase">
         {links.map((l) => (
@@ -919,11 +915,8 @@ function BuildSection() {
 
             <div className="text-[10px] tracking-[0.3em] text-[var(--pink)] mb-4">/MARCA.PERSONAL</div>
 
-            <div className="font-display text-6xl md:text-7xl leading-none mb-2 neon-pink tracking-wider">
-              NIVARO
-            </div>
-            <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-6 pl-1">
-              ◢ WALTER · NEIRA
+            <div className="mb-6 flex justify-center">
+              <img src="/assets/logo-vertical.svg" alt="NIVARO" style={{ height: "160px", width: "auto" }} />
             </div>
 
             <p className="text-sm text-[var(--text)]/75 leading-relaxed mb-4">
