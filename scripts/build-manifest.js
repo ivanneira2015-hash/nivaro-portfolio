@@ -228,7 +228,7 @@ for (const folder of folders) {
   const entry = {
     n:        String(n).padStart(2, "0"),
     folder,
-    url:      `/projects/${folder}/`,
+    url:      meta.url || `/projects/${folder}/`,
     title:    meta.title    || autoMeta.title    || folder.replace(/[-_]/g, " ").toUpperCase(),
     tag:      meta.tag      || "",
     desc:     meta.desc     || autoMeta.desc     || "",

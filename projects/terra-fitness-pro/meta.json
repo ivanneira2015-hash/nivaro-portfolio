@@ -4,6 +4,6 @@
   "desc": "Plataforma web para gym con animaciones 3D en Three.js, efectos visuales con GSAP y Framer Motion. UI full React con TypeScript y Next.js.",
   "color": "pink",
   "hue": "pink",
-  "url": "",
+  "url": "https://entrenforte.netlify.app",
   "repoUrl": ""
 }
