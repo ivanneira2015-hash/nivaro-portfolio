@@ -872,9 +872,14 @@ function BuildSection() {
 // ────────────────────────────────────────────────────────────────────────────
 // CONTACTO
 // ────────────────────────────────────────────────────────────────────────────
+// Reemplazá este ID con el tuyo de formspree.io/f/XXXXXXXX
+const FORMSPREE_ID = "YOUR_FORMSPREE_ID";
+
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", project: "", msg: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [formError, setFormError] = useState("");
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -904,15 +909,27 @@ function ContactSection() {
     });
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.msg) return;
-    setSent(true);
-    gsap.fromTo(".success-glow", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" });
-    setTimeout(() => {
-      setSent(false);
+    setSending(true);
+    setFormError("");
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, project: form.project, message: form.msg }),
+      });
+      if (!res.ok) throw new Error("error");
+      setSent(true);
       setForm({ name: "", email: "", project: "", msg: "" });
-    }, 3500);
+      gsap.fromTo(".success-glow", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" });
+      setTimeout(() => setSent(false), 4000);
+    } catch {
+      setFormError("◢ Error al enviar. Intentá de nuevo o escribime directo a ivanneira2015@gmail.com");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -1037,15 +1054,22 @@ function ContactSection() {
 
               <button
                 type="submit"
-                disabled={sent}
-                className="pulse-btn hover-target relative w-full mt-2 py-4 bg-[var(--pink)] text-[var(--dark)] font-display text-xl tracking-[0.3em] hover:bg-[var(--cyan)] transition-colors disabled:bg-[var(--cyan)] disabled:cursor-default"
+                disabled={sent || sending}
+                className="pulse-btn hover-target relative w-full mt-2 py-4 bg-[var(--pink)] text-[var(--dark)] font-display text-xl tracking-[0.3em] hover:bg-[var(--cyan)] transition-colors disabled:opacity-80 disabled:cursor-default"
+                style={{ background: sent ? "var(--cyan)" : sending ? "rgba(255,45,120,0.6)" : undefined }}
               >
                 {sent ? (
                   <span className="success-glow inline-flex items-center gap-3">✓ MENSAJE_ENVIADO</span>
+                ) : sending ? (
+                  <span className="inline-flex items-center gap-3">ENVIANDO...</span>
                 ) : (
                   <span>ENVIAR ⌁</span>
                 )}
               </button>
+
+              {formError && (
+                <div className="text-[10px] text-[var(--pink)] tracking-wider pt-2 text-center">{formError}</div>
+              )}
 
               <div className="text-[9px] tracking-[0.3em] text-[var(--text)]/30 text-center pt-2">
                 ◢ RESPUESTA EN &lt; 24H · SIN SPAM
