@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node scripts/build-manifest.js",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false
 }

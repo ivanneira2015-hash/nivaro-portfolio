@@ -1650,7 +1650,7 @@ function AdminPanel({ projects, setProjects, onClose }) {
 // ────────────────────────────────────────────────────────────────────────────
 function App() {
   const [adminOpen, setAdminOpen] = useState(false);
-  const [projects, setProjects] = useState(() => {
+  const [adminProjects, setAdminProjects] = useState(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -1658,8 +1658,21 @@ function App() {
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch (e) { /* ignore */ }
-    return DEFAULT_PROJECTS;
+    return [];
   });
+  const [manifestProjects, setManifestProjects] = useState([]);
+
+  useEffect(() => {
+    fetch("/projects/manifest.json")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => setManifestProjects(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  const allProjects =
+    manifestProjects.length > 0 || adminProjects.length > 0
+      ? [...manifestProjects, ...adminProjects]
+      : DEFAULT_PROJECTS;
 
   return (
     <div className="relative bg-[var(--dark)] text-[var(--text)]">
@@ -1667,14 +1680,14 @@ function App() {
       <Nav />
       <HeroSection />
       <AboutSection />
-      <ProjectsSection projects={projects} />
+      <ProjectsSection projects={allProjects} />
       <BuildSection />
       <ContactSection />
       {!adminOpen && <AdminButton onClick={() => setAdminOpen(true)} isOpen={false} />}
       {adminOpen && (
         <AdminPanel
-          projects={projects}
-          setProjects={setProjects}
+          projects={adminProjects}
+          setProjects={setAdminProjects}
           onClose={() => setAdminOpen(false)}
         />
       )}

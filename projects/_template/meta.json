@@ -1,0 +1,9 @@
+{
+  "title": "NOMBRE // PROYECTO",
+  "tag": "Full Stack · Web",
+  "desc": "Descripción breve del proyecto. Qué hace, qué tecnologías usa, qué problema resuelve.",
+  "tags": ["React", "Node.js", "PostgreSQL"],
+  "color": "pink",
+  "hue": "pink",
+  "repoUrl": ""
+}
