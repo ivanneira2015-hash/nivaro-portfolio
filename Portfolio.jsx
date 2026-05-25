@@ -637,9 +637,90 @@ const DEFAULT_PROJECTS = [
   },
 ];
 
+// ─── MODAL IFRAME ──────────────────────────────────────────────────────────
+function ProjectModal({ project, onClose }) {
+  const overlayRef = useRef(null);
+  const panelRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" });
+    gsap.fromTo(panelRef.current, { y: "4%", opacity: 0 }, { y: "0%", opacity: 1, duration: 0.35, ease: "power3.out" });
+
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  const handleClose = () => {
+    gsap.to(overlayRef.current, { opacity: 0, duration: 0.2, onComplete: onClose });
+  };
+
+  return (
+    <div
+      ref={overlayRef}
+      className="fixed inset-0 z-[70] flex flex-col"
+      style={{ background: "rgba(10,10,15,0.96)" }}
+    >
+      {/* Top bar */}
+      <div
+        className="flex items-center justify-between px-4 md:px-6 border-b shrink-0"
+        style={{ height: "52px", borderColor: "rgba(0,229,255,0.2)", background: "var(--dark)" }}
+      >
+        <div className="flex items-center gap-4 min-w-0">
+          <div className="w-2 h-2 rounded-full bg-[var(--pink)] shrink-0" style={{ boxShadow: "0 0 8px var(--pink)" }}></div>
+          <span className="font-display tracking-widest text-sm md:text-base truncate" style={{ color: project.color }}>
+            {project.title}
+          </span>
+          <span className="hidden md:block text-[10px] tracking-[0.25em] text-[var(--text)]/40 truncate">{project.url}</span>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 ml-4">
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center gap-2 text-[10px] tracking-[0.3em] text-[var(--text)]/50 hover:text-[var(--cyan)] transition-colors"
+          >
+            ABRIR ↗
+          </a>
+          <button
+            onClick={handleClose}
+            className="hover-target w-9 h-9 flex items-center justify-center border border-[var(--text)]/20 text-[var(--text)]/60 hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors"
+          >
+            <Icon name="close" size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* iframe */}
+      <div ref={panelRef} className="flex-1 relative">
+        {!loaded && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+            <div className="w-8 h-8 border-2 border-[var(--cyan)] border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-[10px] tracking-[0.4em] text-[var(--text)]/50">CARGANDO.PROYECTO</div>
+          </div>
+        )}
+        <iframe
+          src={project.url}
+          title={project.title}
+          onLoad={() => setLoaded(true)}
+          className="w-full h-full border-0"
+          style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.3s" }}
+          allow="fullscreen"
+        />
+      </div>
+    </div>
+  );
+}
+
 function ProjectsSection({ projects }) {
   const cardsRef = useRef([]);
   cardsRef.current = [];
+  const [openProject, setOpenProject] = useState(null);
 
   useEffect(() => {
     gsap.from(".project-card", {
@@ -668,81 +749,98 @@ function ProjectsSection({ projects }) {
   };
 
   return (
-    <section id="projects" className="projects relative py-32 px-6 md:px-12 bg-[var(--dark)] overflow-hidden">
-      <div className="relative max-w-7xl mx-auto">
-        <div className="projects-header flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
-          <div>
-            <div className="section-tag mb-4">02 // Experiencia</div>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
-              <span className="neon-pink">Stack</span> /<br/>
-              <span className="text-[var(--text)]">Trabajos Recientes.</span>
-            </h2>
-          </div>          <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 max-w-xs">
-            <div className="text-[var(--cyan)] mb-2">// 03 PROYECTOS DESTACADOS</div>
-            Selección de roles y trabajos clave. Detalles completos disponibles a pedido.
+    <>
+      {openProject && <ProjectModal project={openProject} onClose={() => setOpenProject(null)} />}
+
+      <section id="projects" className="projects relative py-32 px-6 md:px-12 bg-[var(--dark)] overflow-hidden">
+        <div className="relative max-w-7xl mx-auto">
+          <div className="projects-header flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
+            <div>
+              <div className="section-tag mb-4">02 // Experiencia</div>
+              <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
+                <span className="neon-pink">Stack</span> /<br/>
+                <span className="text-[var(--text)]">Trabajos Recientes.</span>
+              </h2>
+            </div>
+            <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 max-w-xs">
+              <div className="text-[var(--cyan)] mb-2">// 03 PROYECTOS DESTACADOS</div>
+              Selección de roles y trabajos clave. Detalles completos disponibles a pedido.
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {projects.map((p, i) => (
+              <article
+                key={p.n}
+                ref={(el) => (cardsRef.current[i] = el)}
+                onMouseEnter={() => handleEnter(i)}
+                onMouseLeave={() => handleLeave(i)}
+                onClick={() => p.url && setOpenProject(p)}
+                className="project-card hover-target p-6 md:p-7 flex flex-col group"
+                style={{ minHeight: "440px", cursor: p.url ? "pointer" : "default" }}
+              >
+                <div className="relative h-44 mb-6 overflow-hidden" style={{ background: p.hue }}>
+                  <div className="absolute inset-0 opacity-30" style={{
+                    backgroundImage: "repeating-linear-gradient(to bottom, rgba(0,0,0,0.4) 0px, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 3px)"
+                  }}></div>
+                  <div className="absolute inset-0 flex items-center justify-center font-display text-7xl text-white/20 group-hover:text-white/40 transition-colors">
+                    {p.n}
+                  </div>
+                  <div className="absolute top-3 left-3 text-[10px] tracking-[0.3em] text-white/80">{p.tag}</div>
+                  {p.url && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.45)" }}>
+                      <span className="text-[11px] tracking-[0.4em] text-white border border-white/60 px-4 py-2">VER PROYECTO ↗</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="font-display text-2xl tracking-wider" style={{ color: p.color }}>{p.title}</h3>
+                  <span className="text-[10px] tracking-[0.3em] text-[var(--text)]/40">/{p.n}</span>
+                </div>
+
+                <p className="text-xs md:text-sm text-[var(--text)]/65 leading-relaxed mb-6 flex-1">{p.desc}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {p.tags.map((t) => (
+                    <span key={t} className="text-[10px] tracking-widest text-[var(--text)]/50 border border-[var(--text)]/15 px-2 py-1">{t}</span>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-[var(--text)]/10">
+                  {p.url ? (
+                    <span className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/70 group-hover:text-[var(--cyan)] transition-colors">
+                      Ver Proyecto
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </span>
+                  ) : (
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/25">Próximamente</span>
+                  )}
+                  {p.repoUrl && (
+                    <a
+                      href={p.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-[var(--text)]/40 hover:text-[var(--cyan)] transition-colors"
+                      title="Ver repositorio"
+                    >
+                      <Icon name="github" size={16} />
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <a href="https://github.com/ivanneira2015-hash" target="_blank" rel="noopener" className="inline-block text-[11px] tracking-[0.4em] uppercase border-b border-[var(--pink)] pb-1 text-[var(--text)]/80 hover:text-[var(--pink)] transition-colors">
+              Ver GitHub_Completo →
+            </a>
           </div>
         </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {projects.map((p, i) => (
-            <article
-              key={p.n}
-              ref={(el) => (cardsRef.current[i] = el)}
-              onMouseEnter={() => handleEnter(i)}
-              onMouseLeave={() => handleLeave(i)}
-              className="project-card hover-target p-6 md:p-7 flex flex-col group"
-              style={{ minHeight: "440px" }}
-            >
-              <div className="relative h-44 mb-6 overflow-hidden" style={{ background: p.hue }}>
-                <div className="absolute inset-0 opacity-30" style={{
-                  backgroundImage: "repeating-linear-gradient(to bottom, rgba(0,0,0,0.4) 0px, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 3px)"
-                }}></div>
-                <div className="absolute inset-0 flex items-center justify-center font-display text-7xl text-white/20 group-hover:text-white/40 transition-colors">
-                  {p.n}
-                </div>
-                <div className="absolute top-3 left-3 text-[10px] tracking-[0.3em] text-white/80">{p.tag}</div>
-                <div className="absolute bottom-3 right-3 text-[10px] tracking-[0.3em] text-white/80">▮▮▮▯▯</div>
-              </div>
-
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="font-display text-2xl tracking-wider" style={{ color: p.color }}>{p.title}</h3>
-                <span className="text-[10px] tracking-[0.3em] text-[var(--text)]/40">/{p.n}</span>
-              </div>
-
-              <p className="text-xs md:text-sm text-[var(--text)]/65 leading-relaxed mb-6 flex-1">{p.desc}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {p.tags.map((t) => (
-                  <span key={t} className="text-[10px] tracking-widest text-[var(--text)]/50 border border-[var(--text)]/15 px-2 py-1">{t}</span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-[var(--text)]/10">
-                {p.url ? (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/70 group-hover:text-[var(--cyan)] transition-colors">
-                    <span>Ver Demo</span>
-                    <span className="group-hover:translate-x-1 transition-transform">↗</span>
-                  </a>
-                ) : (
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/25">Próximamente</span>
-                )}
-                {p.repoUrl && (
-                  <a href={p.repoUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--text)]/40 hover:text-[var(--cyan)] transition-colors" title="Ver repositorio">
-                    <Icon name="github" size={16} />
-                  </a>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <a href="https://github.com/ivanneira2015-hash" target="_blank" rel="noopener" className="inline-block text-[11px] tracking-[0.4em] uppercase border-b border-[var(--pink)] pb-1 text-[var(--text)]/80 hover:text-[var(--pink)] transition-colors">
-            Ver GitHub_Completo →
-          </a>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
