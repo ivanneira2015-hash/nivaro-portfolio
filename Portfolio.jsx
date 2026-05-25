@@ -610,6 +610,8 @@ const DEFAULT_PROJECTS = [
     tags: ["React", "Node.js", "PostgreSQL"],
     color: "var(--pink)",
     hue: "linear-gradient(135deg, #FF2D78 0%, #6B0F3A 100%)",
+    url: "",
+    repoUrl: "",
   },
   {
     n: "02",
@@ -619,6 +621,8 @@ const DEFAULT_PROJECTS = [
     tags: ["React", "TypeScript", "Tailwind"],
     color: "var(--cyan)",
     hue: "linear-gradient(135deg, #00E5FF 0%, #0A4D5A 100%)",
+    url: "",
+    repoUrl: "",
   },
   {
     n: "03",
@@ -628,6 +632,8 @@ const DEFAULT_PROJECTS = [
     tags: ["JavaScript", "Docker", "MongoDB"],
     color: "var(--pink)",
     hue: "linear-gradient(135deg, #FF2D78 0%, #00E5FF 100%)",
+    url: "",
+    repoUrl: "",
   },
 ];
 
@@ -711,10 +717,21 @@ function ProjectsSection({ projects }) {
                 ))}
               </div>
 
-              <a href="#contact" className="flex items-center justify-between pt-4 border-t border-[var(--text)]/10 text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/70 group-hover:text-[var(--cyan)] transition-colors">
-                <span>Ver Detalles</span>
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </a>
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--text)]/10">
+                {p.url ? (
+                  <a href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/70 group-hover:text-[var(--cyan)] transition-colors">
+                    <span>Ver Demo</span>
+                    <span className="group-hover:translate-x-1 transition-transform">↗</span>
+                  </a>
+                ) : (
+                  <span className="text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/25">Próximamente</span>
+                )}
+                {p.repoUrl && (
+                  <a href={p.repoUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--text)]/40 hover:text-[var(--cyan)] transition-colors" title="Ver repositorio">
+                    <Icon name="github" size={16} />
+                  </a>
+                )}
+              </div>
             </article>
           ))}
         </div>
@@ -1191,6 +1208,8 @@ function AdminPanel({ projects, setProjects, onClose }) {
       tags: [],
       color: "var(--pink)",
       hue: HUES[0].value,
+      url: "",
+      repoUrl: "",
     });
   };
 
@@ -1361,6 +1380,28 @@ function AdminPanel({ projects, setProjects, onClose }) {
               value={draft.tags.join(", ")}
               onChange={(e) => setDraft({ ...draft, tags: e.target.value.split(",").map(t => t.trim()).filter(Boolean) })}
               placeholder="React, Node.js, PostgreSQL"
+            />
+          </div>
+
+          <div>
+            <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ URL DEMO (opcional)</label>
+            <input
+              className="cyber-input"
+              type="url"
+              value={draft.url || ""}
+              onChange={(e) => setDraft({ ...draft, url: e.target.value })}
+              placeholder="https://mi-proyecto.vercel.app"
+            />
+          </div>
+
+          <div>
+            <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ URL REPOSITORIO GitHub (opcional)</label>
+            <input
+              className="cyber-input"
+              type="url"
+              value={draft.repoUrl || ""}
+              onChange={(e) => setDraft({ ...draft, repoUrl: e.target.value })}
+              placeholder="https://github.com/usuario/repo"
             />
           </div>
 
