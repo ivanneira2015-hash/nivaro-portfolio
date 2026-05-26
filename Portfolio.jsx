@@ -1008,12 +1008,33 @@ function BuildSection() {
 // ────────────────────────────────────────────────────────────────────────────
 // Reemplazá este ID con el tuyo de formspree.io/f/XXXXXXXX
 const FORMSPREE_ID = "xqejddgn";
+// Obtené tu key en formspree.io/account → API Keys (requiere plan Silver o superior)
+const FORMSPREE_API_KEY = "";
+
+async function validateEmailDomain(email) {
+  const domain = email.split("@")[1];
+  if (!domain) return false;
+  try {
+    const res = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`,
+      { headers: { Accept: "application/dns-json" } }
+    );
+    if (!res.ok) return true; // si el check falla, dejamos pasar
+    const data = await res.json();
+    if (data.Status === 3) return false; // NXDOMAIN: dominio inexistente
+    // Si hay registros MX → válido. Si no hay pero el dominio existe → también válido (usa A record)
+    return true;
+  } catch {
+    return true; // error de red: dejamos pasar para no bloquear al usuario
+  }
+}
 
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", project: "", msg: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [formError, setFormError] = useState("");
+  const [emailValidating, setEmailValidating] = useState(false);
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -1047,7 +1068,15 @@ function ContactSection() {
     e.preventDefault();
     if (!form.name || !form.email || !form.msg) return;
     setSending(true);
+    setEmailValidating(true);
     setFormError("");
+    const emailOk = await validateEmailDomain(form.email);
+    setEmailValidating(false);
+    if (!emailOk) {
+      setFormError("◢ El dominio del email no existe. Verificá que sea un email real.");
+      setSending(false);
+      return;
+    }
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
         method: "POST",
@@ -1150,7 +1179,15 @@ function ContactSection() {
                 />
               </div>
               <div>
-                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ EMAIL *</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50">/ EMAIL *</label>
+                  {emailValidating && (
+                    <span className="text-[9px] tracking-[0.3em] text-[var(--cyan)] flex items-center gap-1.5">
+                      <span className="w-2 h-2 border border-[var(--cyan)] border-t-transparent rounded-full animate-spin inline-block"></span>
+                      VERIFICANDO
+                    </span>
+                  )}
+                </div>
                 <input
                   type="email"
                   className="cyber-input"
@@ -1248,6 +1285,143 @@ const HUES = [
   { label: "Acid Lime", value: "linear-gradient(135deg, #B6FF2D 0%, #2A6B0F 100%)", color: "var(--cyan)" },
 ];
 
+// ────────────────────────────────────────────────────────────────────────────
+// INBOX — mensajes de Formspree dentro del panel admin
+// ────────────────────────────────────────────────────────────────────────────
+function InboxView() {
+  const [messages, setMessages] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
+  const [selected, setSelected] = useState(null);
+
+  const load = () => {
+    if (!FORMSPREE_API_KEY) { setLoading(false); return; }
+    setLoading(true);
+    setFetchError("");
+    fetch(`https://api.formspree.io/api/0/forms/${FORMSPREE_ID}/submissions`, {
+      headers: { Authorization: `Bearer ${FORMSPREE_API_KEY}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.submissions !== undefined) setMessages(data.submissions);
+        else setFetchError(data.error || "Error al cargar mensajes");
+      })
+      .catch(() => setFetchError("Error de conexión con Formspree"))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const fmt = (iso) => {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return d.toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" })
+      + " · " + d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+  };
+
+  if (!FORMSPREE_API_KEY) return (
+    <div className="flex-1 overflow-y-auto p-5">
+      <div className="border border-[var(--cyan)]/30 bg-[var(--surface)]/50 p-5">
+        <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-3">/ CONFIGURAR.INBOX</div>
+        <p className="text-xs text-[var(--text)]/70 leading-relaxed mb-5">
+          Para ver los mensajes acá adentro necesitás tu <span className="text-[var(--cyan)]">API Key de Formspree</span> (plan Silver o superior).
+        </p>
+        <div className="space-y-3 text-xs text-[var(--text)]/60 leading-relaxed">
+          {[
+            ["01", "Ir a formspree.io/account → API Keys"],
+            ["02", "Crear una nueva key"],
+            ["03", "Pegarla en Portfolio.jsx en la constante FORMSPREE_API_KEY"],
+          ].map(([n, t]) => (
+            <div key={n} className="flex gap-3">
+              <span className="text-[var(--pink)] flex-shrink-0">{n}</span>
+              <span>{t}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 pt-4 border-t border-[var(--text)]/10 text-[9px] tracking-[0.25em] text-[var(--text)]/35">
+          FORMSPREE_ID: {FORMSPREE_ID} · PLAN REQUERIDO: SILVER
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) return (
+    <div className="flex-1 flex flex-col items-center justify-center gap-3">
+      <div className="w-6 h-6 border-2 border-[var(--cyan)] border-t-transparent rounded-full animate-spin"></div>
+      <div className="text-[10px] tracking-[0.4em] text-[var(--text)]/50">CARGANDO.INBOX</div>
+    </div>
+  );
+
+  if (fetchError) return (
+    <div className="flex-1 p-5 space-y-3">
+      <div className="text-xs text-[var(--pink)] tracking-wider">{fetchError}</div>
+      <button onClick={load} className="hover-target text-[10px] tracking-widest text-[var(--cyan)] underline">↺ Reintentar</button>
+    </div>
+  );
+
+  if (selected) return (
+    <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4">
+      <button onClick={() => setSelected(null)} className="hover-target flex items-center gap-2 text-[10px] tracking-[0.3em] text-[var(--text)]/50 hover:text-[var(--cyan)] transition-colors self-start">
+        ← VOLVER
+      </button>
+      <div className="border border-[var(--pink)]/30 bg-[var(--surface)]/50 p-4 space-y-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="font-display text-lg tracking-wider text-[var(--text)]">{selected.name || "(sin nombre)"}</div>
+          <div className="text-[9px] tracking-widest text-[var(--text)]/40 flex-shrink-0">{fmt(selected._date)}</div>
+        </div>
+        <a href={`mailto:${selected.email}`} className="hover-target block text-xs text-[var(--cyan)] hover:text-[var(--pink)] transition-colors">{selected.email}</a>
+        {selected.project && (
+          <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50">TIPO: {selected.project}</div>
+        )}
+        <div className="border-t border-[var(--text)]/10 pt-3 text-sm text-[var(--text)]/80 leading-relaxed whitespace-pre-wrap">
+          {selected.message || selected.msg || "(sin mensaje)"}
+        </div>
+      </div>
+      <a
+        href={`mailto:${selected.email}?subject=Re: Consulta desde Nivaro&body=Hola ${encodeURIComponent(selected.name || "")},%0D%0A%0D%0A`}
+        className="hover-target flex items-center justify-center gap-2 py-3 border border-[var(--cyan)]/60 text-[var(--cyan)] text-[10px] tracking-[0.3em] uppercase hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+        style={{ boxShadow: "0 0 12px rgba(0,229,255,0.15)" }}
+      >
+        <Icon name="mail" size={13} />
+        RESPONDER POR EMAIL
+      </a>
+    </div>
+  );
+
+  return (
+    <div className="flex-1 overflow-y-auto flex flex-col">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--text)]/10 flex-shrink-0">
+        <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50">
+          {messages.length} MENSAJE{messages.length !== 1 ? "S" : ""}
+        </div>
+        <button onClick={load} className="hover-target text-[10px] tracking-widest text-[var(--cyan)] hover:text-[var(--pink)] transition-colors">
+          ↺ ACTUALIZAR
+        </button>
+      </div>
+      {messages.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center text-[var(--text)]/40 text-xs tracking-widest">◢ SIN MENSAJES AÚN</div>
+      ) : (
+        <div className="divide-y divide-[var(--text)]/10">
+          {messages.map((m) => (
+            <button
+              key={m._id}
+              onClick={() => setSelected(m)}
+              className="hover-target w-full text-left px-5 py-4 hover:bg-[var(--surface)]/60 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2 mb-1">
+                <div className="font-display text-sm tracking-wider text-[var(--text)] truncate">{m.name || m.email || "(anónimo)"}</div>
+                <div className="text-[9px] tracking-widest text-[var(--text)]/40 flex-shrink-0">{fmt(m._date)}</div>
+              </div>
+              <div className="text-[10px] text-[var(--cyan)] truncate mb-1">{m.email}</div>
+              <div className="text-xs text-[var(--text)]/50 truncate">{m.message || m.msg || "—"}</div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AdminButton({ onClick, isOpen }) {
   return (
     <button
@@ -1273,6 +1447,7 @@ function AdminPanel({ projects, setProjects, onClose }) {
   const [editing, setEditing] = useState(null); // index | "new" | null
   const [draft, setDraft] = useState(null);
   const [toast, setToast] = useState("");
+  const [adminTab, setAdminTab] = useState("projects");
   const panelRef = useRef(null);
 
   useEffect(() => {
@@ -1640,52 +1815,73 @@ function AdminPanel({ projects, setProjects, onClose }) {
         </div>
       </header>
 
-      <div className="px-5 py-4 flex items-center gap-2 border-b border-[var(--text)]/10">
-        <button onClick={startNew} className="hover-target flex-1 flex items-center justify-center gap-2 py-2.5 bg-[var(--pink)] text-[var(--dark)] font-display tracking-widest text-sm hover:bg-[var(--cyan)] transition-colors">
-          <Icon name="plus" size={16} />
-          NUEVO
-        </button>
-        <button onClick={exportJSON} title="Exportar JSON" className="hover-target w-10 h-10 border border-[var(--text)]/20 flex items-center justify-center text-[var(--text)]/70 hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors">
-          <Icon name="download" size={16} />
-        </button>
-        <button onClick={resetDefaults} title="Restaurar defaults" className="hover-target w-10 h-10 border border-[var(--text)]/20 flex items-center justify-center text-[var(--text)]/70 hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors">
-          <Icon name="reset" size={16} />
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-5 space-y-3">
-        {projects.length === 0 && (
-          <div className="text-center py-12 text-[var(--text)]/40 text-xs tracking-widest">
-            ◢ NO HAY PROYECTOS<br/><br/>
-            <button onClick={startNew} className="hover-target text-[var(--cyan)] underline">Crear el primero →</button>
+      <div className="border-b border-[var(--text)]/10">
+        <div className="flex">
+          {[["projects", "PROYECTOS"], ["inbox", "INBOX"]].map(([tab, label]) => (
+            <button
+              key={tab}
+              onClick={() => setAdminTab(tab)}
+              className={`hover-target flex-1 py-3 text-[10px] tracking-[0.3em] uppercase transition-colors border-b-2 ${
+                adminTab === tab
+                  ? "text-[var(--pink)] border-[var(--pink)]"
+                  : "text-[var(--text)]/50 border-transparent hover:text-[var(--cyan)]"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {adminTab === "projects" && (
+          <div className="px-5 py-3 flex items-center gap-2">
+            <button onClick={startNew} className="hover-target flex-1 flex items-center justify-center gap-2 py-2.5 bg-[var(--pink)] text-[var(--dark)] font-display tracking-widest text-sm hover:bg-[var(--cyan)] transition-colors">
+              <Icon name="plus" size={16} />
+              NUEVO
+            </button>
+            <button onClick={exportJSON} title="Exportar JSON" className="hover-target w-10 h-10 border border-[var(--text)]/20 flex items-center justify-center text-[var(--text)]/70 hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors">
+              <Icon name="download" size={16} />
+            </button>
+            <button onClick={resetDefaults} title="Restaurar defaults" className="hover-target w-10 h-10 border border-[var(--text)]/20 flex items-center justify-center text-[var(--text)]/70 hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors">
+              <Icon name="reset" size={16} />
+            </button>
           </div>
         )}
-        {projects.map((p, i) => (
-          <div key={i} className="border border-[var(--text)]/15 bg-[var(--surface)]/50 p-3 flex items-center gap-3 group hover:border-[var(--pink)]/40 transition-colors">
-            <div className="w-14 h-14 flex-shrink-0 relative overflow-hidden" style={{ background: p.hue }}>
-              <div className="absolute inset-0 flex items-center justify-center font-display text-xl text-white/40">{p.n}</div>
+      </div>
+
+      {adminTab === "inbox" ? <InboxView /> : (
+        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+          {projects.length === 0 && (
+            <div className="text-center py-12 text-[var(--text)]/40 text-xs tracking-widest">
+              ◢ NO HAY PROYECTOS<br/><br/>
+              <button onClick={startNew} className="hover-target text-[var(--cyan)] underline">Crear el primero →</button>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-display text-sm tracking-wider truncate" style={{ color: p.color }}>{p.title}</div>
-              <div className="text-[10px] tracking-widest text-[var(--text)]/50 truncate">{p.tag}</div>
-              <div className="flex gap-1 mt-1.5 flex-wrap">
-                {p.tags.slice(0, 3).map((t) => (
-                  <span key={t} className="text-[9px] tracking-wider text-[var(--text)]/40 border border-[var(--text)]/15 px-1.5 py-0.5">{t}</span>
-                ))}
-                {p.tags.length > 3 && <span className="text-[9px] text-[var(--text)]/40">+{p.tags.length - 3}</span>}
+          )}
+          {projects.map((p, i) => (
+            <div key={i} className="border border-[var(--text)]/15 bg-[var(--surface)]/50 p-3 flex items-center gap-3 group hover:border-[var(--pink)]/40 transition-colors">
+              <div className="w-14 h-14 flex-shrink-0 relative overflow-hidden" style={{ background: p.hue }}>
+                <div className="absolute inset-0 flex items-center justify-center font-display text-xl text-white/40">{p.n}</div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-display text-sm tracking-wider truncate" style={{ color: p.color }}>{p.title}</div>
+                <div className="text-[10px] tracking-widest text-[var(--text)]/50 truncate">{p.tag}</div>
+                <div className="flex gap-1 mt-1.5 flex-wrap">
+                  {p.tags.slice(0, 3).map((t) => (
+                    <span key={t} className="text-[9px] tracking-wider text-[var(--text)]/40 border border-[var(--text)]/15 px-1.5 py-0.5">{t}</span>
+                  ))}
+                  {p.tags.length > 3 && <span className="text-[9px] text-[var(--text)]/40">+{p.tags.length - 3}</span>}
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <button onClick={() => startEdit(i)} title="Editar" className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--cyan)] hover:border-[var(--cyan)] transition-colors">
+                  <Icon name="edit" size={14} />
+                </button>
+                <button onClick={() => deleteProject(i)} title="Eliminar" className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--pink)] hover:border-[var(--pink)] transition-colors">
+                  <Icon name="trash" size={14} />
+                </button>
               </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <button onClick={() => startEdit(i)} title="Editar" className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--cyan)] hover:border-[var(--cyan)] transition-colors">
-                <Icon name="edit" size={14} />
-              </button>
-              <button onClick={() => deleteProject(i)} title="Eliminar" className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--pink)] hover:border-[var(--pink)] transition-colors">
-                <Icon name="trash" size={14} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <footer className="p-4 border-t border-[var(--text)]/10 flex items-center justify-between text-[10px] tracking-widest">
         <span className="text-[var(--text)]/40">LOCAL_STORAGE_ONLY</span>
