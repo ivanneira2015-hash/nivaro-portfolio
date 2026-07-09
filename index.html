@@ -288,6 +288,19 @@
       a, button, input, textarea, .hover-target { cursor: auto; }
     }
   </style>
+  <script
+    src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    Sentry.onLoad(function() {
+      Sentry.init({
+        dsn: "https://303c520a1fd14170f0d91fc73c695c20@o4511586657763328.ingest.us.sentry.io/4511586775400448",
+        environment: "production",
+        tracesSampleRate: 1.0
+      });
+    });
+  </script>
 </head>
 <body>
   <div id="root"></div>

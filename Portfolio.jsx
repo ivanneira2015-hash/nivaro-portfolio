@@ -1,6 +1,139 @@
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useRef, createContext, useContext } = React;
 
 gsap.registerPlugin(ScrollTrigger);
+
+// ────────────────────────────────────────────────────────────────────────────
+// TRANSLATIONS
+// ────────────────────────────────────────────────────────────────────────────
+const T = {
+  es: {
+    'nav.hero':'Inicio','nav.about':'Sobre_Mí','nav.projects':'Proyectos',
+    'nav.certs':'Certificaciones','nav.videos':'Videos','nav.build':'Build',
+    'nav.contact':'Contacto','nav.hire':'[ Contratame ]','nav.menu':'MENÚ',
+    'hero.tag':'FULL_STACK',
+    'hero.sub1':'Desarrollador Full Stack · React · Node.js · TypeScript',
+    'hero.sub2':'Construyo aplicaciones web cliente–servidor end-to-end.',
+    'hero.sub3':'Basado en Argentina — disponible remoto.',
+    'hero.cta.projects':'Ver_Proyectos','hero.cta.cv':'Descargar_CV','hero.cta.cv.es':'CV · ES','hero.cta.cv.en':'CV · EN','hero.cta.contact':'Enviar_Mensaje →',
+    'about.tag':'01 // Sobre_El_Operador',
+    'about.h2a':'Construyo','about.h2b':'software','about.h2c':'que','about.h2d':'funciona.',
+    'about.p3':'"Código limpio, features end-to-end, sin vueltas."',
+    'about.arsenal':'Arsenal_Técnico',
+    'about.stat1':'Años Activo','about.stat2':'Front + Back','about.stat3':'Commits',
+    'about.profile':'PERFIL.OPERADOR','about.available':'DISPONIBLE',
+    'about.fn':'NOMBRE','about.fr':'ROL','about.fb':'BASE','about.fs':'STACK','about.fl':'IDIOMAS','about.fc':'EMPRESA',
+    'about.download':'Descargar CV','about.matrix':'MATRIZ.HABILIDADES',
+    'about.sk1':'Frontend / React','about.sk2':'Backend / Node','about.sk3':'Bases de Datos','about.sk4':'Testing / Cypress',
+    'about.career':'REGISTRO.TRAYECTORIA',
+    'about.j1':'Full Stack Developer · ForIT','about.j1d':'2026 — Actualidad',
+    'about.j2':'Frontend Developer · Evirtual S.A.','about.j2d':'2024 — 2025',
+    'about.j3':'Dev & Técnico IT · Freelance','about.j3d':'2023 — Actualidad',
+    'proj.tag':'02 // Experiencia','proj.h2a':'Stack','proj.h2b':'Trabajos Recientes.',
+    'proj.note':'Selección de roles y trabajos clave. Detalles completos disponibles a pedido.',
+    'proj.see':'Ver Proyecto','proj.soon':'Próximamente','proj.github':'Ver GitHub_Completo →',
+    'proj.details':'VER DETALLES →','proj.demo':'VER DEMO ↗','proj.nodemo':'DEMO NO DISPONIBLE',
+    'proj.repo':'REPOSITORIO','proj.stack':'/ STACK_TECNOLÓGICO',
+    'build.tag':'03 // Bajo_El_Capó','build.h2a':'Cómo','build.h2b':' está',
+    'build.h2c':'construido este sitio.','build.disc':'// FULL_DISCLOSURE',
+    'build.note':'Transparencia total: el mismo stack que uso para mis clientes. Sin frameworks ocultos.',
+    'build.brand.tag':'/EMPRESA.MARCA','build.brand.tagline':'Soluciones Tecnológicas',
+    'build.brand.desc':'es la empresa detrás del trabajo. Software a medida, sistemas completos, presencia digital profesional. Cada producto que firmo sale bajo esta marca.',
+    'build.brand.desc2':'Del diseño al deploy — end-to-end. Sin intermediarios.',
+    'build.brand.f1':'TIPO','build.brand.v1':'Software Studio',
+    'build.brand.f2':'DESDE','build.brand.v2':'2024',
+    'build.brand.f3':'SEDE','build.brand.v3':'Argentina',
+    'build.brand.f4':'ESTADO','build.brand.v4':'Activo',
+    'build.brand.cta':'Ver Empresa',
+    'build.stack':'/STACK.DEL.SITIO',
+    'build.tr':'UI / Componentes','build.tg':'Animaciones','build.tt':'Estilos utility-first',
+    'build.tj':'Lógica & estado','build.ts':'Iconos & paleta',
+    'build.note2t':'/ NOTA_TÉCNICA',
+    'build.note2':'Una sola página, React 18 con hooks, animaciones orquestadas con GSAP Timeline + ScrollTrigger. Sin librerías de UI prefabricadas — cada componente está hecho a mano.',
+    'certs.tag':'// Formación_Certificada','certs.h2a':'Certificaciones','certs.h2b':'& Estudios.',
+    'certs.note':'Formación técnica y certificaciones obtenidas.','certs.see':'VER CREDENCIAL ↗',
+    'vids.tag':'// Demos_En_Vivo','vids.h2a':'Videos','vids.h2b':'& Demos.',
+    'vids.note':'Proyectos en acción. Demos reales, sin edición.',
+    'contact.tag':'04 // Canal_Abierto',
+    'contact.h2a':'Hablemos del','contact.h2b':'próximo','contact.h2c':'proyecto.',
+    'contact.desc':'¿Tenés un proyecto, una idea, o necesitás un dev full stack que entregue? Mandame un mensaje. Respondo todos los emails en menos de',
+    'contact.fn':'/ NOMBRE *','contact.fe':'/ EMAIL *','contact.fp':'/ TIPO_DE_PROYECTO','contact.fm':'/ MENSAJE *',
+    'contact.pn':'Tu nombre','contact.pe':'vos@empresa.com','contact.pm':'Contame qué tenés en mente...',
+    'contact.sel':'— Seleccionar tipo —',
+    'contact.o1':'Web / Landing','contact.o2':'App / Plataforma','contact.o3':'API / Backend',
+    'contact.o4':'Full Stack End-to-End','contact.o5':'Consultoría / IT',
+    'contact.btn':'ENVIAR ⌁','contact.sending':'ENVIANDO...','contact.sent':'✓ MENSAJE_ENVIADO',
+    'contact.spam':'◢ RESPUESTA EN < 24H · SIN SPAM',
+    'contact.err1':'◢ El dominio del email no existe. Verificá que sea un email real.',
+    'contact.err2':'◢ Error al enviar. Intentá de nuevo o escribime directo a ivanneira2015@gmail.com',
+    'contact.verify':'VERIFICANDO',
+    'footer.made':'HECHO CON CÓDIGO · ARGENTINA_2026',
+  },
+  en: {
+    'nav.hero':'Home','nav.about':'About_Me','nav.projects':'Projects',
+    'nav.certs':'Certifications','nav.videos':'Videos','nav.build':'Build',
+    'nav.contact':'Contact','nav.hire':'[ Hire Me ]','nav.menu':'MENU',
+    'hero.tag':'FULL_STACK',
+    'hero.sub1':'Full Stack Developer · React · Node.js · TypeScript',
+    'hero.sub2':'I build end-to-end client–server web applications.',
+    'hero.sub3':'Based in Argentina — available remotely.',
+    'hero.cta.projects':'See_Projects','hero.cta.cv':'Download_CV','hero.cta.cv.es':'CV · ES','hero.cta.cv.en':'CV · EN','hero.cta.contact':'Send_Message →',
+    'about.tag':'01 // About_The_Operator',
+    'about.h2a':'I build','about.h2b':'software','about.h2c':'that','about.h2d':'works.',
+    'about.p3':'"Clean code, end-to-end features, no fluff."',
+    'about.arsenal':'Tech_Arsenal',
+    'about.stat1':'Years Active','about.stat2':'Front + Back','about.stat3':'Commits',
+    'about.profile':'OPERATOR.PROFILE','about.available':'AVAILABLE',
+    'about.fn':'NAME','about.fr':'ROLE','about.fb':'LOCATION','about.fs':'STACK','about.fl':'LANGUAGES','about.fc':'COMPANY',
+    'about.download':'Download CV','about.matrix':'SKILLS.MATRIX',
+    'about.sk1':'Frontend / React','about.sk2':'Backend / Node','about.sk3':'Databases','about.sk4':'Testing / Cypress',
+    'about.career':'CAREER.RECORD',
+    'about.j1':'Full Stack Developer · ForIT','about.j1d':'2026 — Present',
+    'about.j2':'Frontend Developer · Evirtual S.A.','about.j2d':'2024 — 2025',
+    'about.j3':'Dev & IT Technician · Freelance','about.j3d':'2023 — Present',
+    'proj.tag':'02 // Experience','proj.h2a':'Stack','proj.h2b':'Recent Work.',
+    'proj.note':'Selection of key roles and work. Full details available on request.',
+    'proj.see':'See Project','proj.soon':'Coming Soon','proj.github':'See Full_GitHub →',
+    'proj.details':'SEE DETAILS →','proj.demo':'SEE DEMO ↗','proj.nodemo':'DEMO UNAVAILABLE',
+    'proj.repo':'REPOSITORY','proj.stack':'/ TECH_STACK',
+    'build.tag':'03 // Under_The_Hood','build.h2a':'How','build.h2b':'',
+    'build.h2c':'this site is built.','build.disc':'// FULL_DISCLOSURE',
+    'build.note':'Full transparency: the same stack I use for clients. No hidden frameworks.',
+    'build.brand.tag':'/COMPANY.BRAND','build.brand.tagline':'Tech Solutions',
+    'build.brand.desc':'is the company behind the work. Custom software, complete systems, professional digital presence. Every product I ship goes out under this brand.',
+    'build.brand.desc2':'From design to deploy — end-to-end. No middlemen.',
+    'build.brand.f1':'TYPE','build.brand.v1':'Software Studio',
+    'build.brand.f2':'SINCE','build.brand.v2':'2024',
+    'build.brand.f3':'BASE','build.brand.v3':'Argentina',
+    'build.brand.f4':'STATUS','build.brand.v4':'Active',
+    'build.brand.cta':'See Company',
+    'build.stack':'/SITE.STACK',
+    'build.tr':'UI / Components','build.tg':'Animations','build.tt':'Utility-first styles',
+    'build.tj':'Logic & state','build.ts':'Icons & palette',
+    'build.note2t':'/ TECH_NOTE',
+    'build.note2':'Single page, React 18 with hooks, animations orchestrated with GSAP Timeline + ScrollTrigger. No pre-built UI libraries — every component is handcrafted.',
+    'certs.tag':'// Certified_Training','certs.h2a':'Certifications','certs.h2b':'& Studies.',
+    'certs.note':'Technical training and earned certifications.','certs.see':'SEE CREDENTIAL ↗',
+    'vids.tag':'// Live_Demos','vids.h2a':'Videos','vids.h2b':'& Demos.',
+    'vids.note':'Projects in action. Real demos, unedited.',
+    'contact.tag':'04 // Open_Channel',
+    'contact.h2a':"Let's talk about",'contact.h2b':'the next','contact.h2c':'project.',
+    'contact.desc':'Got a project, an idea, or need a full stack dev who delivers? Send me a message. I reply to every email in less than',
+    'contact.fn':'/ NAME *','contact.fe':'/ EMAIL *','contact.fp':'/ PROJECT_TYPE','contact.fm':'/ MESSAGE *',
+    'contact.pn':'Your name','contact.pe':'you@company.com','contact.pm':'Tell me what you have in mind...',
+    'contact.sel':'— Select type —',
+    'contact.o1':'Web / Landing','contact.o2':'App / Platform','contact.o3':'API / Backend',
+    'contact.o4':'Full Stack End-to-End','contact.o5':'Consulting / IT',
+    'contact.btn':'SEND ⌁','contact.sending':'SENDING...','contact.sent':'✓ MESSAGE_SENT',
+    'contact.spam':'◢ RESPONSE IN < 24H · NO SPAM',
+    'contact.err1':'◢ The email domain does not exist. Please use a real email.',
+    'contact.err2':'◢ Error sending. Try again or email me at ivanneira2015@gmail.com',
+    'contact.verify':'VERIFYING',
+    'footer.made':'MADE WITH CODE · ARGENTINA_2026',
+  }
+};
+
+const LangContext = createContext({ lang: 'es', setLang: () => {}, t: k => k });
+const useLang = () => useContext(LangContext);
 
 // ────────────────────────────────────────────────────────────────────────────
 // ICONS (inline SVG)
@@ -165,17 +298,22 @@ function Cursor() {
 // ────────────────────────────────────────────────────────────────────────────
 // NAV
 // ────────────────────────────────────────────────────────────────────────────
-function Nav() {
+function Nav({ hasCerts = false, hasVideos = false }) {
   const navRef = useRef(null);
   const [active, setActive] = useState("hero");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { t, lang, setLang } = useLang();
+
+  const baseSections = ["hero", "about", "projects"];
+  const extraSections = [...(hasCerts ? ["certs"] : []), ...(hasVideos ? ["videos"] : [])];
+  const allSections = [...baseSections, ...extraSections, "build", "contact"];
 
   useEffect(() => {
     gsap.from(navRef.current, { y: -60, opacity: 0, duration: 0.9, ease: "power3.out", delay: 0.2 });
 
-    const sections = ["hero", "about", "projects", "build", "contact"];
     const onScroll = () => {
       let current = "hero";
-      sections.forEach((id) => {
+      allSections.forEach((id) => {
         const el = document.getElementById(id);
         if (el && window.scrollY + 200 >= el.offsetTop) current = id;
       });
@@ -183,46 +321,166 @@ function Nav() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [hasCerts, hasVideos]);
 
-  const links = [
-    { id: "hero", label: "00 / Inicio" },
-    { id: "about", label: "01 / Sobre_Mí" },
-    { id: "projects", label: "02 / Proyectos" },
-    { id: "build", label: "03 / Build" },
-    { id: "contact", label: "04 / Contacto" },
+  const linkDefs = [
+    { id: "hero", label: t('nav.hero') },
+    { id: "about", label: t('nav.about') },
+    { id: "projects", label: t('nav.projects') },
+    ...(hasCerts ? [{ id: "certs", label: t('nav.certs') }] : []),
+    ...(hasVideos ? [{ id: "videos", label: t('nav.videos') }] : []),
+    { id: "build", label: "Build" },
+    { id: "contact", label: t('nav.contact') },
   ];
+  const links = linkDefs.map((l, i) => ({ ...l, label: `${String(i).padStart(2, "0")} / ${l.label}` }));
 
   return (
-    <nav ref={navRef} className="nav-blur fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 flex items-center justify-between">
-      <a href="#hero" className="flex items-center group">
-        <img src="/assets/logo.svg" alt="NIVARO" style={{ height: "44px", width: "auto" }} />
-      </a>
-      <ul className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.25em] uppercase">
-        {links.map((l) => (
-          <li key={l.id}>
-            <a
-              href={`#${l.id}`}
-              className={`transition-colors ${active === l.id ? "text-[var(--pink)]" : "text-[var(--text)]/70 hover:text-[var(--cyan)]"}`}
-              style={active === l.id ? { textShadow: "0 0 12px rgba(255,45,120,0.8)" } : {}}
+    <>
+      <nav ref={navRef} className="nav-blur fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <a href="#hero" className="flex items-center group">
+            <img src="/assets/logo.svg" alt="NIVARO" style={{ height: "44px", width: "auto" }} />
+          </a>
+          <a
+            href="https://nivaroenterprise.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden lg:flex items-center gap-2 pl-4 border-l border-[var(--text)]/15 opacity-70 hover:opacity-100 transition-opacity"
+          >
+            <svg width="22" height="22" viewBox="0 0 34 34" style={{ flexShrink: 0 }}>
+              <rect width="34" height="34" rx="7" fill="#3525CD"/>
+              <line x1="9" y1="25" x2="9" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+              <line x1="9" y1="9" x2="25" y2="25" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+              <line x1="25" y1="25" x2="25" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+              <circle cx="17" cy="17" r="2" fill="#C9A84C"/>
+            </svg>
+            <div className="leading-none">
+              <div className="font-display text-[10px] tracking-[0.2em] text-[var(--text)]">NIVARO</div>
+              <div className="font-display text-[10px] tracking-[0.2em]" style={{ color: "#6B5FE8" }}>ENTERPRISE</div>
+            </div>
+          </a>
+        </div>
+
+        <ul className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.25em] uppercase">
+          {links.map((l) => (
+            <li key={l.id}>
+              <a
+                href={`#${l.id}`}
+                className={`transition-colors ${active === l.id ? "text-[var(--pink)]" : "text-[var(--text)]/70 hover:text-[var(--cyan)]"}`}
+                style={active === l.id ? { textShadow: "0 0 12px rgba(255,45,120,0.8)" } : {}}
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+            className="text-[10px] tracking-[0.3em] uppercase border border-[var(--text)]/20 px-3 py-2 hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors text-[var(--text)]/60"
+          >
+            {lang === 'es' ? 'EN' : 'ES'}
+          </button>
+          <a href="#contact" className="text-[10px] tracking-[0.3em] uppercase border border-[var(--cyan)]/60 px-4 py-2 hover:bg-[var(--cyan)]/10 transition-colors text-[var(--cyan)]">
+            {t('nav.hire')}
+          </a>
+        </div>
+
+        <div className="md:hidden flex items-center gap-3">
+          <button
+            onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+            className="text-[var(--text)]/60 text-[10px] tracking-widest border border-[var(--text)]/20 px-2 py-1.5 hover:text-[var(--cyan)] transition-colors"
+          >
+            {lang === 'es' ? 'EN' : 'ES'}
+          </button>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="hover-target flex flex-col justify-center items-center gap-[5px] w-8 h-8"
+            aria-label="Abrir menú"
+          >
+            <span className={`block w-5 h-[1.5px] bg-[var(--cyan)] transition-all duration-300 ${mobileOpen ? 'rotate-45 translate-y-[6.5px]' : ''}`}></span>
+            <span className={`block h-[1.5px] bg-[var(--cyan)] transition-all duration-300 ${mobileOpen ? 'w-0 opacity-0' : 'w-5'}`}></span>
+            <span className={`block w-5 h-[1.5px] bg-[var(--cyan)] transition-all duration-300 ${mobileOpen ? '-rotate-45 -translate-y-[6.5px]' : ''}`}></span>
+          </button>
+        </div>
+      </nav>
+
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-[60] flex flex-col" style={{ background: "rgba(10,10,15,0.97)", backdropFilter: "blur(20px)" }}>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--text)]/10">
+            <img src="/assets/logo.svg" alt="NIVARO" style={{ height: "36px" }} />
+            <button onClick={() => setMobileOpen(false)} className="hover-target text-[var(--text)]/60 hover:text-[var(--pink)] transition-colors p-2">
+              <Icon name="close" size={22} />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto py-10 px-6">
+            <ul className="space-y-6">
+              {links.map((l) => (
+                <li key={l.id}>
+                  <a
+                    href={`#${l.id}`}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block font-display text-4xl tracking-wider transition-colors ${active === l.id ? 'neon-pink' : 'text-[var(--text)]/70 hover:text-[var(--cyan)]'}`}
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 pt-8 border-t border-[var(--text)]/10">
+              <a
+                href="https://nivaroenterprise.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 mb-6 opacity-80"
+              >
+                <svg width="28" height="28" viewBox="0 0 34 34">
+                  <rect width="34" height="34" rx="7" fill="#3525CD"/>
+                  <line x1="9" y1="25" x2="9" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                  <line x1="9" y1="9" x2="25" y2="25" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                  <line x1="25" y1="25" x2="25" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                  <circle cx="17" cy="17" r="2" fill="#C9A84C"/>
+                </svg>
+                <div>
+                  <div className="font-display text-sm tracking-[0.2em] text-[var(--text)]">NIVAROENTERPRISE ↗</div>
+                  <div className="text-[10px] tracking-[0.2em] text-[var(--text)]/40">Software Studio</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div className="px-6 pb-10 pt-6 border-t border-[var(--text)]/10 space-y-3">
+            <button
+              onClick={() => { setLang(lang === 'es' ? 'en' : 'es'); setMobileOpen(false); }}
+              className="hover-target w-full py-3 border border-[var(--text)]/20 text-[10px] tracking-[0.3em] text-[var(--text)]/60 hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors"
             >
-              {l.label}
+              {lang === 'es' ? 'SWITCH TO ENGLISH ↗' : 'CAMBIAR A ESPAÑOL ↗'}
+            </button>
+            <a
+              href="#contact"
+              onClick={() => setMobileOpen(false)}
+              className="hover-target block w-full py-3 border border-[var(--cyan)]/60 text-[10px] tracking-[0.3em] text-[var(--cyan)] text-center hover:bg-[var(--cyan)]/10 transition-colors"
+            >
+              {t('nav.hire')}
             </a>
-          </li>
-        ))}
-      </ul>
-      <a href="#contact" className="hidden md:inline-block text-[10px] tracking-[0.3em] uppercase border border-[var(--cyan)]/60 px-4 py-2 hover:bg-[var(--cyan)]/10 transition-colors text-[var(--cyan)]">
-        [ Contratame ]
-      </a>
-      <a href="#contact" className="md:hidden text-[var(--cyan)] text-xs tracking-widest border border-[var(--cyan)]/60 px-3 py-1.5">MENÚ</a>
-    </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
 // ────────────────────────────────────────────────────────────────────────────
 // HERO
 // ────────────────────────────────────────────────────────────────────────────
-function HeroSection() {
+function HeroSection({ cvUrl, cvUrlEn }) {
+  const { t } = useLang();
+  const cvHref = cvUrl || "uploads/Full_Stack_Developer_walter_neira.pdf";
+  const cvHrefEn = cvUrlEn || cvHref;
   const subtitleRef = useRef(null);
   const ctaRef = useRef(null);
   const bgRef = useRef(null);
@@ -297,7 +555,7 @@ function HeroSection() {
             <span>◢◤</span>
             <span>PORTFOLIO_v2026</span>
             <span className="opacity-40">//</span>
-            <span className="opacity-70">FULL_STACK</span>
+            <span className="opacity-70">{t('hero.tag')}</span>
           </div>
 
           <h1 className="hero-title font-display text-[64px] md:text-[110px] lg:text-[150px] leading-[0.85] mb-4">
@@ -307,13 +565,13 @@ function HeroSection() {
 
           <div ref={subtitleRef} className="mt-8 space-y-2 max-w-xl">
             <p className="sub-line text-[var(--text)]/85 text-sm md:text-base leading-relaxed">
-              <span className="text-[var(--cyan)]">&gt;</span> Desarrollador Full Stack · React · Node.js · TypeScript
+              <span className="text-[var(--cyan)]">&gt;</span> {t('hero.sub1')}
             </p>
             <p className="sub-line text-[var(--text)]/60 text-xs md:text-sm leading-relaxed">
-              <span className="text-[var(--pink)]">▍</span> Construyo aplicaciones web cliente–servidor end-to-end.
+              <span className="text-[var(--pink)]">▍</span> {t('hero.sub2')}
             </p>
             <p className="sub-line text-[var(--text)]/60 text-xs md:text-sm leading-relaxed">
-              <span className="text-[var(--pink)]">▍</span> Basado en <span className="text-[var(--text)]">Argentina</span> — disponible remoto.
+              <span className="text-[var(--pink)]">▍</span> {t('hero.sub3')}
             </p>
           </div>
 
@@ -323,20 +581,31 @@ function HeroSection() {
               className="group flex items-center gap-3 text-[11px] tracking-[0.4em] uppercase border border-[var(--pink)] px-6 py-4 hover:bg-[var(--pink)] hover:text-[var(--dark)] transition-all"
               style={{ boxShadow: "0 0 24px rgba(255,45,120,0.3)" }}
             >
-              <span>Ver_Proyectos</span>
+              <span>{t('hero.cta.projects')}</span>
               <span className="bounce-arrow">↓</span>
             </a>
-            <a
-              href="uploads/Full_Stack_Developer_walter_neira.pdf"
-              download="Walter_Neira_CV.pdf"
-              className="group flex items-center gap-3 text-[11px] tracking-[0.4em] uppercase border border-[var(--cyan)] px-6 py-4 hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
-              style={{ boxShadow: "0 0 24px rgba(0,229,255,0.2)" }}
-            >
-              <Icon name="download" size={15} />
-              <span>Descargar_CV</span>
-            </a>
+            <div className="flex gap-2">
+              <a
+                href={cvHref}
+                download="Walter_Neira_CV.pdf"
+                className="group flex items-center gap-2 text-[10px] tracking-[0.35em] uppercase border border-[var(--cyan)] px-5 py-4 hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+                style={{ boxShadow: "0 0 20px rgba(0,229,255,0.2)" }}
+              >
+                <Icon name="download" size={13} />
+                <span>{t('hero.cta.cv.es')}</span>
+              </a>
+              <a
+                href={cvHrefEn}
+                download="Walter_Neira_CV_EN.pdf"
+                className="group flex items-center gap-2 text-[10px] tracking-[0.35em] uppercase border border-[var(--cyan)]/50 px-5 py-4 hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+                style={{ boxShadow: "0 0 20px rgba(0,229,255,0.1)" }}
+              >
+                <Icon name="download" size={13} />
+                <span>{t('hero.cta.cv.en')}</span>
+              </a>
+            </div>
             <a href="#contact" className="text-[11px] tracking-[0.4em] uppercase text-[var(--text)]/70 hover:text-[var(--cyan)] py-4 border-b border-transparent hover:border-[var(--cyan)] transition-all">
-              Enviar_Mensaje →
+              {t('hero.cta.contact')}
             </a>
           </div>
         </div>
@@ -360,12 +629,30 @@ function HeroSection() {
 // ────────────────────────────────────────────────────────────────────────────
 // SOBRE MÍ
 // ────────────────────────────────────────────────────────────────────────────
-function AboutSection() {
+function AboutSection({ cvUrlEn }) {
+  const { t, lang } = useLang();
+  const cvHrefEn = cvUrlEn || "uploads/Full_Stack_Developer_walter_neira.pdf";
   const skills = [
-    "React", "TypeScript", "Next.js", "JavaScript", "Tailwind",
-    "Node.js", "Express", "REST APIs", ".NET", "C#", "Java",
-    "PostgreSQL", "Prisma ORM", "MongoDB", "SQL Server",
-    "Docker", "Git", "Cypress", "Scrum", "Kanban"
+    { name: "React",       pct: 92 },
+    { name: "JavaScript",  pct: 90 },
+    { name: "Tailwind",    pct: 88 },
+    { name: "TypeScript",  pct: 85 },
+    { name: "Git",         pct: 85 },
+    { name: "Node.js",     pct: 83 },
+    { name: "REST APIs",   pct: 82 },
+    { name: "Express",     pct: 80 },
+    { name: "Scrum",       pct: 80 },
+    { name: "PostgreSQL",  pct: 78 },
+    { name: "Kanban",      pct: 76 },
+    { name: "Next.js",     pct: 75 },
+    { name: "Prisma ORM",  pct: 72 },
+    { name: "Cypress",     pct: 70 },
+    { name: "Docker",      pct: 65 },
+    { name: "MongoDB",     pct: 65 },
+    { name: "SQL Server",  pct: 62 },
+    { name: "C#",          pct: 58 },
+    { name: ".NET",        pct: 55 },
+    { name: "Java",        pct: 50 },
   ];
 
   useEffect(() => {
@@ -411,38 +698,58 @@ function AboutSection() {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%)" }}></div>
 
       <div className="relative max-w-7xl mx-auto">
-        <div className="section-tag mb-8">01 // Sobre_El_Operador</div>
+        <div className="section-tag mb-8">{t('about.tag')}</div>
 
         <div className="grid md:grid-cols-12 gap-10 items-start">
           <div className="about-content md:col-span-7">
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95] mb-8">
-              Construyo <span className="neon-pink">software</span><br/>
-              que <span className="neon-cyan">funciona.</span>
+              {t('about.h2a')} <span className="neon-pink">{t('about.h2b')}</span><br/>
+              {t('about.h2c')} <span className="neon-cyan">{t('about.h2d')}</span>
             </h2>
             <div className="space-y-5 text-[var(--text)]/75 text-sm md:text-base leading-relaxed max-w-xl">
-              <p>
-                Soy <span className="text-[var(--cyan)]">Desarrollador Full Stack</span> con experiencia en aplicaciones web cliente–servidor, integración de APIs REST, manejo de bases de datos y testing automatizado.
-              </p>
-              <p>
-                Trabajo con <span className="text-[var(--text)]">React, TypeScript, Node.js, Express y PostgreSQL</span>, bajo metodologías ágiles (Scrum / Kanban). Uso herramientas de IA para optimizar el flujo de desarrollo y entregar más rápido sin sacrificar calidad.
-              </p>
+              {lang === 'es' ? (
+                <p>Soy <span className="text-[var(--cyan)]">Desarrollador Full Stack</span> con experiencia en aplicaciones web cliente–servidor, integración de APIs REST, manejo de bases de datos y testing automatizado.</p>
+              ) : (
+                <p>I'm a <span className="text-[var(--cyan)]">Full Stack Developer</span> with experience in client–server web apps, REST API integration, database management, and automated testing.</p>
+              )}
+              {lang === 'es' ? (
+                <p>Trabajo con <span className="text-[var(--text)]">React, TypeScript, Node.js, Express y PostgreSQL</span>, bajo metodologías ágiles (Scrum / Kanban). Uso herramientas de IA para optimizar el flujo de desarrollo y entregar más rápido sin sacrificar calidad.</p>
+              ) : (
+                <p>I work with <span className="text-[var(--text)]">React, TypeScript, Node.js, Express, and PostgreSQL</span>, under agile methodologies (Scrum / Kanban). I leverage AI tools to optimize the dev workflow and ship faster without sacrificing quality.</p>
+              )}
               <p className="text-[var(--text)]/55 text-xs tracking-wider border-l border-[var(--pink)]/40 pl-4">
-                "Código limpio, features end-to-end, sin vueltas."
+                {t('about.p3')}
               </p>
+            </div>
+
+            <div className="mt-10">
+              <div className="section-tag mb-5">{t('about.arsenal')}</div>
+              <div className="skills-grid flex flex-wrap gap-2">
+                {skills.map((s) => (
+                  <div key={s.name} className="skill-badge hover-target relative overflow-hidden" style={{ paddingBottom: "10px" }}>
+                    <span className="relative z-10 select-none">{s.name} <span style={{ color: s.pct >= 80 ? "var(--pink)" : "var(--cyan)", opacity: 0.85 }}>· {s.pct}%</span></span>
+                    <div className="absolute bottom-0 left-0 h-[2px]" style={{
+                      width: `${s.pct}%`,
+                      background: s.pct >= 80 ? "var(--pink)" : "var(--cyan)",
+                      boxShadow: s.pct >= 80 ? "0 0 6px var(--pink)" : "0 0 6px var(--cyan)",
+                    }}></div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="stats-row mt-12 grid grid-cols-3 gap-4 md:gap-8 max-w-lg">
               <div className="stat-block">
                 <div className="font-display text-4xl md:text-5xl neon-pink">03+</div>
-                <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50 mt-1 uppercase">Años Activo</div>
+                <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50 mt-1 uppercase">{t('about.stat1')}</div>
               </div>
               <div className="stat-block">
                 <div className="font-display text-4xl md:text-5xl neon-cyan">E2E</div>
-                <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50 mt-1 uppercase">Front + Back</div>
+                <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50 mt-1 uppercase">{t('about.stat2')}</div>
               </div>
               <div className="stat-block">
                 <div className="font-display text-4xl md:text-5xl neon-pink">∞</div>
-                <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50 mt-1 uppercase">Commits</div>
+                <div className="text-[10px] tracking-[0.25em] text-[var(--text)]/50 mt-1 uppercase">{t('about.stat3')}</div>
               </div>
             </div>
           </div>
@@ -512,21 +819,21 @@ function AboutSection() {
               <span className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-[var(--cyan)]"></span>
 
               <div className="flex items-center justify-between mb-5">
-                <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)]">PERFIL.OPERADOR</div>
+                <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)]">{t('about.profile')}</div>
                 <div className="text-[10px] tracking-[0.3em] text-[var(--pink)] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--pink)] animate-pulse"></span>
-                  DISPONIBLE
+                  {t('about.available')}
                 </div>
               </div>
 
               <div className="space-y-3 text-xs">
                 {[
-                  ["NOMBRE", "Walter I. Neira A."],
-                  ["ROL", "Full Stack Developer"],
-                  ["BASE", "Argentina ⇄ Remoto"],
-                  ["STACK", "React · Node · TS"],
-                  ["IDIOMAS", "ES nativo · EN A2"],
-                  ["EMPRESA", "ForIT Software Factory"],
+                  [t('about.fn'), "Walter I. Neira A."],
+                  [t('about.fr'), "Full Stack Developer"],
+                  [t('about.fb'), "Argentina ⇄ Remoto"],
+                  [t('about.fs'), "React · Node · TS"],
+                  [t('about.fl'), "ES nativo · EN A2"],
+                  [t('about.fc'), "ForIT Software Factory"],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between border-b border-dashed border-[var(--text)]/10 pb-2">
                     <span className="text-[var(--text)]/40 tracking-widest">{k}</span>
@@ -535,25 +842,34 @@ function AboutSection() {
                 ))}
               </div>
 
-              <div className="mt-5 pt-5 border-t border-[var(--text)]/10">
+              <div className="mt-5 pt-5 border-t border-[var(--text)]/10 flex gap-2">
                 <a
                   href="uploads/Full_Stack_Developer_walter_neira.pdf"
                   download="Walter_Neira_CV.pdf"
-                  className="hover-target flex items-center justify-center gap-3 w-full py-3 border border-[var(--cyan)]/60 text-[var(--cyan)] text-[10px] tracking-[0.3em] uppercase hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+                  className="hover-target flex items-center justify-center gap-2 flex-1 py-3 border border-[var(--cyan)]/60 text-[var(--cyan)] text-[10px] tracking-[0.3em] uppercase hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
                   style={{ boxShadow: "0 0 14px rgba(0,229,255,0.15)" }}
                 >
-                  <Icon name="download" size={13} />
-                  Descargar CV
+                  <Icon name="download" size={12} />
+                  CV · ES
+                </a>
+                <a
+                  href={cvHrefEn}
+                  download="Walter_Neira_CV_EN.pdf"
+                  className="hover-target flex items-center justify-center gap-2 flex-1 py-3 border border-[var(--cyan)]/40 text-[var(--cyan)] text-[10px] tracking-[0.3em] uppercase hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
+                  style={{ boxShadow: "0 0 8px rgba(0,229,255,0.1)" }}
+                >
+                  <Icon name="download" size={12} />
+                  CV · EN
                 </a>
               </div>
 
               <div className="mt-5 pt-5 border-t border-[var(--text)]/10">
-                <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-3">MATRIZ.HABILIDADES</div>
+                <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-3">{t('about.matrix')}</div>
                 {[
-                  ["Frontend / React", 92],
-                  ["Backend / Node", 85],
-                  ["Bases de Datos", 82],
-                  ["Testing / Cypress", 78],
+                  [t('about.sk1'), 92],
+                  [t('about.sk2'), 85],
+                  [t('about.sk3'), 82],
+                  [t('about.sk4'), 78],
                 ].map(([label, val]) => (
                   <div key={label} className="mb-3">
                     <div className="flex justify-between text-[10px] tracking-wider mb-1">
@@ -570,27 +886,27 @@ function AboutSection() {
 
             {/* Bloque educación / experiencia */}
             <div className="mt-6 relative border border-[var(--cyan)]/25 bg-[var(--surface)]/40 p-6 backdrop-blur-sm">
-              <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-4">REGISTRO.TRAYECTORIA</div>
+              <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-4">{t('about.career')}</div>
               <div className="space-y-4 text-xs">
                 <div className="flex gap-3">
                   <div className="w-1 bg-[var(--pink)] flex-shrink-0 mt-1" style={{ boxShadow: "0 0 8px var(--pink)" }}></div>
                   <div>
-                    <div className="text-[var(--text)]">Full Stack Developer · ForIT</div>
-                    <div className="text-[var(--text)]/40 text-[10px] tracking-wider mt-0.5">2026 — Actualidad</div>
+                    <div className="text-[var(--text)]">{t('about.j1')}</div>
+                    <div className="text-[var(--text)]/40 text-[10px] tracking-wider mt-0.5">{t('about.j1d')}</div>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <div className="w-1 bg-[var(--cyan)] flex-shrink-0 mt-1" style={{ boxShadow: "0 0 8px var(--cyan)" }}></div>
                   <div>
-                    <div className="text-[var(--text)]">Frontend Developer · Evirtual S.A.</div>
-                    <div className="text-[var(--text)]/40 text-[10px] tracking-wider mt-0.5">2024 — 2025</div>
+                    <div className="text-[var(--text)]">{t('about.j2')}</div>
+                    <div className="text-[var(--text)]/40 text-[10px] tracking-wider mt-0.5">{t('about.j2d')}</div>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <div className="w-1 bg-[var(--text)]/30 flex-shrink-0 mt-1"></div>
                   <div>
-                    <div className="text-[var(--text)]/80">Dev & Técnico IT · Freelance</div>
-                    <div className="text-[var(--text)]/40 text-[10px] tracking-wider mt-0.5">2023 — Actualidad</div>
+                    <div className="text-[var(--text)]/80">{t('about.j3')}</div>
+                    <div className="text-[var(--text)]/40 text-[10px] tracking-wider mt-0.5">{t('about.j3d')}</div>
                   </div>
                 </div>
               </div>
@@ -598,15 +914,6 @@ function AboutSection() {
           </div>
         </div>
 
-        {/* Habilidades */}
-        <div className="mt-20">
-          <div className="section-tag mb-6">Arsenal_Técnico</div>
-          <div className="skills-grid flex flex-wrap gap-2">
-            {skills.map((s) => (
-              <span key={s} className="skill-badge hover-target">{s}</span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -652,25 +959,109 @@ const DEFAULT_PROJECTS = [
     url: "",
     repoUrl: "",
   },
+  {
+    n: "04",
+    title: "VORTEX // STUDIO",
+    tag: "SaaS · IA · Full Stack",
+    desc: "Plataforma que genera apps Flutter, Kotlin y React Native completas a partir de una descripción en lenguaje natural. IA en tiempo real con SSE streaming, exportación ZIP, build en la nube con GitHub Actions y deploy en Railway + Vercel.",
+    tags: ["React", "TypeScript", "Vite", "Express", "Groq IA", "PostgreSQL", "SSE"],
+    color: "var(--cyan)",
+    hue: "linear-gradient(135deg, #00E5FF 0%, #6B00FF 100%)",
+    url: "https://vortex-studio-flame.vercel.app",
+    repoUrl: "",
+  },
+  {
+    n: "05",
+    title: "ARCFORGE // BUILD",
+    tag: "SaaS · Monorepo · Full Stack",
+    desc: "Plataforma web de alto rendimiento con arquitectura monorepo: frontend Next.js, API REST con Express, PostgreSQL, design system con Radix UI y Zod, testing E2E con Playwright y unitario con Vitest.",
+    tags: ["Next.js", "TypeScript", "Express", "PostgreSQL", "Radix UI", "Playwright", "Vitest"],
+    color: "var(--pink)",
+    hue: "linear-gradient(135deg, #FF2D78 0%, #FF6B00 100%)",
+    url: "https://web-nivaro.vercel.app",
+    repoUrl: "https://github.com/ivanneira2015-hash/arcforge",
+  },
+  {
+    n: "06",
+    title: "NEXDESK // DESKTOP",
+    tag: "Electron · App de escritorio",
+    desc: "Aplicación de escritorio multiplataforma para gestión profesional de servicios técnicos. Electron + React con Vite, distribución via Electron Builder, UI con TailwindCSS y Lucide icons.",
+    tags: ["Electron", "React", "TypeScript", "Vite", "TailwindCSS", "Electron Builder"],
+    color: "var(--cyan)",
+    hue: "linear-gradient(135deg, #00E5FF 0%, #005F73 100%)",
+    url: "",
+    repoUrl: "",
+  },
+  {
+    n: "07",
+    title: "KPI // COMMAND",
+    tag: "Analytics · SaaS · Dashboard",
+    desc: "Dashboard de analítica empresarial con visualizaciones interactivas, autenticación con NextAuth, base de datos Neon PostgreSQL, ORM Prisma y componentes shadcn/ui. Gráficos con Recharts.",
+    tags: ["Next.js", "React 19", "TypeScript", "Prisma", "PostgreSQL", "Recharts", "shadcn/ui"],
+    color: "var(--pink)",
+    hue: "linear-gradient(135deg, #FF2D78 0%, #1A003A 100%)",
+    url: "https://kpi-command-lime.vercel.app",
+    repoUrl: "",
+  },
+  {
+    n: "08",
+    title: "NOVA // AI",
+    tag: "IA · SaaS · Pagos",
+    desc: "Plataforma SaaS con múltiples providers de IA (Anthropic, FAL AI), pagos con Stripe, autenticación con Supabase, gestión de formularios con React Hook Form, animaciones con Framer Motion.",
+    tags: ["Next.js", "TypeScript", "Anthropic", "FAL AI", "Stripe", "Framer Motion", "Zod"],
+    color: "var(--cyan)",
+    hue: "linear-gradient(135deg, #00E5FF 0%, #FF2D78 100%)",
+    url: "",
+    repoUrl: "",
+  },
+  {
+    n: "09",
+    title: "RECOGNITIONS // APP",
+    tag: "Plataforma interna · RR.HH.",
+    desc: "Sistema de reconocimientos para empleados con integración Discord. Monorepo con Next.js, Express, PostgreSQL + Prisma, CI/CD con GitHub Actions. Desarrollado para ForIT.",
+    tags: ["Next.js", "Express", "PostgreSQL", "Prisma", "Discord API", "GitHub Actions", "pnpm"],
+    color: "var(--pink)",
+    hue: "linear-gradient(135deg, #FF2D78 0%, #5865F2 100%)",
+    url: "",
+    repoUrl: "",
+  },
+  {
+    n: "10",
+    title: "MAYO // EXPRESS",
+    tag: "SaaS · POS · Gestión",
+    desc: "Sistema POS completo para distribuidoras mayoristas y minoristas. Control de stock, ventas, caja, clientes y reportes en tiempo real. Multi-usuario con roles y permisos.",
+    tags: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "TailwindCSS"],
+    color: "var(--cyan)",
+    hue: "linear-gradient(135deg, #00E5FF 0%, #0A6E5A 100%)",
+    url: "",
+    repoUrl: "",
+  },
+  {
+    n: "11",
+    title: "AMIA // EMPLEO",
+    tag: "Plataforma · Colaboración",
+    desc: "Plataforma de empleo inclusivo para personas con discapacidad. Sistema de candidatos, postulaciones y empresas con testing con Jest. Colaboración con ForIT para AMIA Argentina.",
+    tags: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Jest"],
+    color: "var(--pink)",
+    hue: "linear-gradient(135deg, #FF2D78 0%, #003580 100%)",
+    url: "",
+    repoUrl: "",
+  },
 ];
 
-// ─── MODAL IFRAME ──────────────────────────────────────────────────────────
+// ─── DETAIL PANEL ──────────────────────────────────────────────────────────
 function ProjectModal({ project, onClose }) {
+  const { t } = useLang();
   const overlayRef = useRef(null);
   const panelRef = useRef(null);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" });
-    gsap.fromTo(panelRef.current, { y: "4%", opacity: 0 }, { y: "0%", opacity: 1, duration: 0.35, ease: "power3.out" });
-
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    gsap.fromTo(panelRef.current, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" });
+    const onKey = (e) => { if (e.key === "Escape") handleClose(); };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
   }, []);
 
   const handleClose = () => {
@@ -678,63 +1069,82 @@ function ProjectModal({ project, onClose }) {
   };
 
   return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-[70] flex flex-col"
-      style={{ background: "rgba(10,10,15,0.96)" }}
-    >
-      {/* Top bar */}
-      <div
-        className="flex items-center justify-between px-4 md:px-6 border-b shrink-0"
-        style={{ height: "52px", borderColor: "rgba(0,229,255,0.2)", background: "var(--dark)" }}
-      >
-        <div className="flex items-center gap-4 min-w-0">
-          <div className="w-2 h-2 rounded-full bg-[var(--pink)] shrink-0" style={{ boxShadow: "0 0 8px var(--pink)" }}></div>
-          <span className="font-display tracking-widest text-sm md:text-base truncate" style={{ color: project.color }}>
-            {project.title}
-          </span>
-          <span className="hidden md:block text-[10px] tracking-[0.25em] text-[var(--text)]/40 truncate">{project.url}</span>
-        </div>
-        <div className="flex items-center gap-3 shrink-0 ml-4">
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 text-[10px] tracking-[0.3em] text-[var(--text)]/50 hover:text-[var(--cyan)] transition-colors"
-          >
-            ABRIR ↗
-          </a>
-          <button
-            onClick={handleClose}
-            className="hover-target w-9 h-9 flex items-center justify-center border border-[var(--text)]/20 text-[var(--text)]/60 hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors"
-          >
-            <Icon name="close" size={16} />
-          </button>
-        </div>
-      </div>
+    <div ref={overlayRef} className="fixed inset-0 z-[70] flex items-center justify-center p-4 md:p-8"
+      style={{ background: "rgba(10,10,15,0.92)", backdropFilter: "blur(8px)" }}
+      onClick={(e) => { if (e.target === overlayRef.current) handleClose(); }}>
 
-      {/* iframe */}
-      <div ref={panelRef} className="flex-1 relative">
-        {!loaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-            <div className="w-8 h-8 border-2 border-[var(--cyan)] border-t-transparent rounded-full animate-spin"></div>
-            <div className="text-[10px] tracking-[0.4em] text-[var(--text)]/50">CARGANDO.PROYECTO</div>
+      <div ref={panelRef} className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        style={{ background: "var(--surface)", border: "1px solid rgba(255,45,120,0.3)", boxShadow: "0 0 60px rgba(255,45,120,0.15), 0 0 120px rgba(0,0,0,0.8)" }}>
+
+        {/* Corner brackets */}
+        <span className="absolute -top-px -left-px w-5 h-5 border-t-2 border-l-2 border-[var(--pink)] z-10"></span>
+        <span className="absolute -top-px -right-px w-5 h-5 border-t-2 border-r-2 border-[var(--pink)] z-10"></span>
+        <span className="absolute -bottom-px -left-px w-5 h-5 border-b-2 border-l-2 border-[var(--cyan)] z-10"></span>
+        <span className="absolute -bottom-px -right-px w-5 h-5 border-b-2 border-r-2 border-[var(--cyan)] z-10"></span>
+
+        {/* Image / gradient header */}
+        <div className="relative h-52 overflow-hidden" style={{ background: project.hue || project.color }}>
+          {project.image && <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />}
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,15,0.1) 0%, rgba(10,10,15,0.7) 100%)" }}></div>
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: "repeating-linear-gradient(to bottom, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px)",
+          }}></div>
+          <div className="absolute top-3 left-4 text-[10px] tracking-[0.3em] text-white/70">{project.tag}</div>
+          <div className="absolute top-3 right-4">
+            <button onClick={handleClose} className="hover-target w-8 h-8 flex items-center justify-center border border-white/20 text-white/70 hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors" style={{ background: "rgba(10,10,15,0.6)" }}>
+              <Icon name="close" size={15} />
+            </button>
           </div>
-        )}
-        <iframe
-          src={project.url}
-          title={project.title}
-          onLoad={() => setLoaded(true)}
-          className="w-full h-full border-0"
-          style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.3s" }}
-          allow="fullscreen"
-        />
+          <div className="absolute bottom-4 left-4">
+            <div className="font-display text-3xl md:text-4xl tracking-wider" style={{ color: project.color, textShadow: `0 0 20px ${project.color}` }}>{project.title}</div>
+          </div>
+          <div className="absolute bottom-4 right-4 text-[10px] tracking-[0.3em] text-white/40">/{project.n}</div>
+        </div>
+
+        {/* Body */}
+        <div className="p-6 space-y-6">
+          <p className="text-sm text-[var(--text)]/80 leading-relaxed">{project.desc}</p>
+
+          {project.tags && project.tags.length > 0 && (
+            <div>
+              <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-3">{t('proj.stack')}</div>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((t) => (
+                  <span key={t} className="text-[10px] tracking-widest border px-3 py-1.5" style={{ borderColor: "rgba(0,229,255,0.3)", color: "var(--text)", background: "rgba(0,229,255,0.05)" }}>{t}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            {project.url ? (
+              <a href={project.url} target="_blank" rel="noopener noreferrer"
+                className="hover-target flex-1 flex items-center justify-center gap-3 py-3 text-[11px] tracking-[0.3em] uppercase font-display"
+                style={{ background: "var(--pink)", color: "var(--dark)", boxShadow: "0 0 20px rgba(255,45,120,0.4)" }}>
+                {t('proj.demo')}
+              </a>
+            ) : (
+              <div className="flex-1 flex items-center justify-center py-3 text-[10px] tracking-[0.3em] uppercase border border-[var(--text)]/15 text-[var(--text)]/30">
+                {t('proj.nodemo')}
+              </div>
+            )}
+            {project.repoUrl ? (
+              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
+                className="hover-target flex-1 flex items-center justify-center gap-3 py-3 text-[11px] tracking-[0.3em] uppercase border font-display transition-colors"
+                style={{ borderColor: "rgba(0,229,255,0.4)", color: "var(--cyan)" }}>
+                <Icon name="github" size={15} />
+                {t('proj.repo')}
+              </a>
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
 function ProjectsSection({ projects }) {
+  const { t } = useLang();
   const cardsRef = useRef([]);
   cardsRef.current = [];
   const [openProject, setOpenProject] = useState(null);
@@ -773,15 +1183,15 @@ function ProjectsSection({ projects }) {
         <div className="relative max-w-7xl mx-auto">
           <div className="projects-header flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
             <div>
-              <div className="section-tag mb-4">02 // Experiencia</div>
+              <div className="section-tag mb-4">{t('proj.tag')}</div>
               <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
-                <span className="neon-pink">Stack</span> /<br/>
-                <span className="text-[var(--text)]">Trabajos Recientes.</span>
+                <span className="neon-pink">{t('proj.h2a')}</span> /<br/>
+                <span className="text-[var(--text)]">{t('proj.h2b')}</span>
               </h2>
             </div>
             <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 max-w-xs">
-              <div className="text-[var(--cyan)] mb-2">// 03 PROYECTOS DESTACADOS</div>
-              Selección de roles y trabajos clave. Detalles completos disponibles a pedido.
+              <div className="text-[var(--cyan)] mb-2">// {projects.length} PROYECTOS</div>
+              {t('proj.note')}
             </div>
           </div>
 
@@ -792,9 +1202,9 @@ function ProjectsSection({ projects }) {
                 ref={(el) => (cardsRef.current[i] = el)}
                 onMouseEnter={() => handleEnter(i)}
                 onMouseLeave={() => handleLeave(i)}
-                onClick={() => p.url && setOpenProject(p)}
+                onClick={() => setOpenProject(p)}
                 className="project-card hover-target p-6 md:p-7 flex flex-col group"
-                style={{ minHeight: "440px", cursor: p.url ? "pointer" : "default" }}
+                style={{ minHeight: "440px", cursor: "pointer" }}
               >
                 <div className="relative h-44 mb-6 overflow-hidden" style={{ background: p.image ? "#0A0A0F" : p.hue }}>
                   {p.image && (
@@ -809,11 +1219,9 @@ function ProjectsSection({ projects }) {
                     </div>
                   )}
                   <div className="absolute top-3 left-3 text-[10px] tracking-[0.3em] text-white/80">{p.tag}</div>
-                  {p.url && (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.45)" }}>
-                      <span className="text-[11px] tracking-[0.4em] text-white border border-white/60 px-4 py-2">VER PROYECTO ↗</span>
-                    </div>
-                  )}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.45)" }}>
+                    <span className="text-[11px] tracking-[0.4em] text-white border border-white/60 px-4 py-2">{t('proj.details')}</span>
+                  </div>
                 </div>
 
                 <div className="flex items-start justify-between mb-3">
@@ -832,11 +1240,11 @@ function ProjectsSection({ projects }) {
                 <div className="flex items-center justify-between pt-4 border-t border-[var(--text)]/10">
                   {p.url ? (
                     <span className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/70 group-hover:text-[var(--cyan)] transition-colors">
-                      Ver Proyecto
+                      {t('proj.see')}
                       <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </span>
                   ) : (
-                    <span className="text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/25">Próximamente</span>
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-[var(--text)]/25">{t('proj.soon')}</span>
                   )}
                   {p.repoUrl && (
                     <a
@@ -857,7 +1265,7 @@ function ProjectsSection({ projects }) {
 
           <div className="mt-12 text-center">
             <a href="https://github.com/ivanneira2015-hash" target="_blank" rel="noopener" className="inline-block text-[11px] tracking-[0.4em] uppercase border-b border-[var(--pink)] pb-1 text-[var(--text)]/80 hover:text-[var(--pink)] transition-colors">
-              Ver GitHub_Completo →
+              {t('proj.github')}
             </a>
           </div>
         </div>
@@ -870,6 +1278,7 @@ function ProjectsSection({ projects }) {
 // BUILD / SOBRE NIVARO — Stack del sitio + explicación de marca
 // ────────────────────────────────────────────────────────────────────────────
 function BuildSection() {
+  const { t } = useLang();
   useEffect(() => {
     gsap.from(".build-header", {
       scrollTrigger: { trigger: "#build", start: "top 80%" },
@@ -897,12 +1306,12 @@ function BuildSection() {
   }, []);
 
   const tech = [
-    { name: "React 18", role: "UI / Componentes", icon: "react", color: "var(--cyan)" },
-    { name: "GSAP + ScrollTrigger", role: "Animaciones", icon: "gsap", color: "var(--pink)" },
-    { name: "Tailwind CSS", role: "Estilos utility-first", icon: "tailwind", color: "var(--cyan)" },
-    { name: "JavaScript ES2024", role: "Lógica & estado", icon: "code", color: "var(--pink)" },
+    { name: "React 18", role: t('build.tr'), icon: "react", color: "var(--cyan)" },
+    { name: "GSAP + ScrollTrigger", role: t('build.tg'), icon: "gsap", color: "var(--pink)" },
+    { name: "Tailwind CSS", role: t('build.tt'), icon: "tailwind", color: "var(--cyan)" },
+    { name: "JavaScript ES2024", role: t('build.tj'), icon: "code", color: "var(--pink)" },
     { name: "Google Fonts", role: "Bebas Neue · JetBrains Mono", icon: "google", color: "var(--cyan)" },
-    { name: "SVG + CSS Vars", role: "Iconos & paleta", icon: "sparkle", color: "var(--pink)" },
+    { name: "SVG + CSS Vars", role: t('build.ts'), icon: "sparkle", color: "var(--pink)" },
   ];
 
   return (
@@ -914,66 +1323,88 @@ function BuildSection() {
       <div className="relative max-w-7xl mx-auto">
         <div className="build-header flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
           <div>
-            <div className="section-tag mb-4">03 // Bajo_El_Capó</div>
+            <div className="section-tag mb-4">{t('build.tag')}</div>
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
-              <span className="neon-cyan">Cómo</span> está<br/>
-              <span className="text-[var(--text)]">construido este sitio.</span>
+              <span className="neon-cyan">{t('build.h2a')}</span>{t('build.h2b')}<br/>
+              <span className="text-[var(--text)]">{t('build.h2c')}</span>
             </h2>
           </div>
           <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 max-w-xs">
-            <div className="text-[var(--pink)] mb-2">// FULL_DISCLOSURE</div>
-            Transparencia total: el mismo stack que uso para mis clientes. Sin frameworks ocultos.
+            <div className="text-[var(--pink)] mb-2">{t('build.disc')}</div>
+            {t('build.note')}
           </div>
         </div>
 
         <div className="grid md:grid-cols-12 gap-8 items-start">
-          {/* Marca / NIVARO */}
+          {/* NivaroEnterprise — Company Brand */}
           <div className="build-brand md:col-span-5 relative border border-[var(--cyan)]/30 bg-[var(--surface)]/60 p-7 backdrop-blur-sm">
             <span className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-[var(--pink)]"></span>
             <span className="absolute -top-px -right-px w-4 h-4 border-t-2 border-r-2 border-[var(--pink)]"></span>
             <span className="absolute -bottom-px -left-px w-4 h-4 border-b-2 border-l-2 border-[var(--pink)]"></span>
             <span className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-[var(--pink)]"></span>
 
-            <div className="text-[10px] tracking-[0.3em] text-[var(--pink)] mb-4">/MARCA.PERSONAL</div>
+            <div className="text-[10px] tracking-[0.3em] text-[var(--pink)] mb-5">{t('build.brand.tag')}</div>
 
-            <div className="mb-6 flex justify-center">
-              <img src="/assets/logo-vertical.svg" alt="NIVARO" style={{ height: "160px", width: "auto" }} />
+            <div className="mb-6 flex items-center gap-4">
+              <div className="flex-shrink-0" style={{ borderRadius: "10px", boxShadow: "0 0 24px rgba(53,37,205,0.45)" }}>
+                <svg width="58" height="58" viewBox="0 0 34 34">
+                  <rect width="34" height="34" rx="8" fill="#3525CD"/>
+                  <line x1="9" y1="25" x2="9" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                  <line x1="9" y1="9" x2="25" y2="25" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                  <line x1="25" y1="25" x2="25" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                  <circle cx="17" cy="17" r="2" fill="#C9A84C"/>
+                </svg>
+              </div>
+              <div>
+                <div className="font-display text-2xl tracking-widest leading-none text-[var(--text)]">NIVARO</div>
+                <div className="font-display text-2xl tracking-widest leading-none" style={{ color: "#3525CD", textShadow: "0 0 18px rgba(53,37,205,0.55)" }}>ENTERPRISE</div>
+                <div className="text-[9px] tracking-[0.35em] text-[var(--text)]/40 mt-1.5">{t('build.brand.tagline')}</div>
+              </div>
             </div>
 
-            <p className="text-sm text-[var(--text)]/75 leading-relaxed mb-4">
-              <span className="text-[var(--cyan)]">Nivaro</span> es mi marca personal como desarrollador.
-              Es donde firmo cada proyecto, cada commit, cada interfaz que sale al mundo.
+            <p className="text-sm text-[var(--text)]/75 leading-relaxed mb-2">
+              <span className="text-[var(--cyan)]">NivaroEnterprise</span> {t('build.brand.desc')}
             </p>
-            <p className="text-xs text-[var(--text)]/55 leading-relaxed mb-6">
-              Una identidad propia para distinguir mi trabajo independiente: software bien hecho, código limpio, y entrega end-to-end.
+            <p className="text-xs text-[var(--text)]/50 leading-relaxed mb-6">
+              {t('build.brand.desc2')}
             </p>
 
-            <div className="grid grid-cols-2 gap-3 text-[10px] tracking-[0.25em]">
+            <div className="grid grid-cols-2 gap-3 text-[10px] tracking-[0.25em] mb-6">
               <div className="border border-[var(--text)]/10 p-3">
-                <div className="text-[var(--text)]/40 mb-1">SIGNIFICA</div>
-                <div className="text-[var(--text)]">Identidad de Dev</div>
+                <div className="text-[var(--text)]/40 mb-1">{t('build.brand.f1')}</div>
+                <div className="text-[var(--text)]">{t('build.brand.v1')}</div>
               </div>
               <div className="border border-[var(--text)]/10 p-3">
-                <div className="text-[var(--text)]/40 mb-1">DESDE</div>
-                <div className="text-[var(--text)]">2024</div>
+                <div className="text-[var(--text)]/40 mb-1">{t('build.brand.f2')}</div>
+                <div className="text-[var(--text)]">{t('build.brand.v2')}</div>
               </div>
               <div className="border border-[var(--text)]/10 p-3">
-                <div className="text-[var(--text)]/40 mb-1">SECTOR</div>
-                <div className="text-[var(--text)]">Software / IT</div>
+                <div className="text-[var(--text)]/40 mb-1">{t('build.brand.f3')}</div>
+                <div className="text-[var(--text)]">{t('build.brand.v3')}</div>
               </div>
               <div className="border border-[var(--text)]/10 p-3">
-                <div className="text-[var(--text)]/40 mb-1">ESTADO</div>
+                <div className="text-[var(--text)]/40 mb-1">{t('build.brand.f4')}</div>
                 <div className="text-[var(--pink)] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--pink)] animate-pulse"></span>
-                  Activo
+                  {t('build.brand.v4')}
                 </div>
               </div>
             </div>
+
+            <a
+              href="https://nivaroenterprise.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover-target flex items-center justify-center gap-2 w-full py-3 border text-[11px] tracking-[0.3em] uppercase transition-all hover:bg-[var(--pink)] hover:text-[var(--dark)] hover:border-[var(--pink)]"
+              style={{ borderColor: "#3525CD", color: "#3525CD", boxShadow: "0 0 14px rgba(53,37,205,0.2)" }}
+            >
+              {t('build.brand.cta')} ↗
+            </a>
           </div>
 
           {/* Tech stack */}
           <div className="md:col-span-7">
-            <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-5">/STACK.DEL.SITIO</div>
+            <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-5">{t('build.stack')}</div>
 
             <div className="tech-grid grid sm:grid-cols-2 gap-3">
               {tech.map((t) => (
@@ -990,13 +1421,170 @@ function BuildSection() {
             </div>
 
             <div className="mt-6 border-t border-[var(--text)]/10 pt-5 text-[10px] tracking-[0.25em] text-[var(--text)]/45 leading-relaxed">
-              <div className="text-[var(--cyan)] mb-2">/ NOTA_TÉCNICA</div>
+              <div className="text-[var(--cyan)] mb-2">{t('build.note2t')}</div>
               <p>
-                Una sola página, React 18 con hooks, animaciones orquestadas con GSAP Timeline + ScrollTrigger.
-                Sin librerías de UI prefabricadas — cada componente está hecho a mano.
+                {t('build.note2')}
               </p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// CERTIFICACIONES
+// ────────────────────────────────────────────────────────────────────────────
+function CertificationsSection({ certs }) {
+  if (!certs || certs.length === 0) return null;
+
+  useEffect(() => {
+    gsap.from(".cert-card", {
+      scrollTrigger: { trigger: "#certs", start: "top 75%" },
+      y: 60, opacity: 0, stagger: 0.1, duration: 0.8, ease: "back.out(1.2)",
+    });
+    gsap.from(".certs-header", {
+      scrollTrigger: { trigger: "#certs", start: "top 85%" },
+      y: 30, opacity: 0, duration: 0.7, ease: "power3.out",
+    });
+  }, [certs.length]);
+
+  return (
+    <section id="certs" className="relative py-32 px-6 md:px-12 bg-[var(--surface)] overflow-hidden">
+      <div className="absolute inset-0 opacity-30 pointer-events-none" style={{
+        background: "radial-gradient(circle at 80% 20%, rgba(0,229,255,0.12) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(255,45,120,0.1) 0%, transparent 50%)"
+      }}></div>
+
+      <div className="relative max-w-7xl mx-auto">
+        <div className="certs-header flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
+          <div>
+            <div className="section-tag mb-4">// Formación_Certificada</div>
+            <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
+              <span className="neon-cyan">Certificaciones</span><br/>
+              <span className="text-[var(--text)]">& Estudios.</span>
+            </h2>
+          </div>
+          <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 max-w-xs">
+            <div className="text-[var(--pink)] mb-2">// CREDENCIALES.VERIFICADAS</div>
+            Formación técnica y certificaciones obtenidas.
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {certs.map((cert, i) => (
+            <div key={cert.id || i} className="cert-card relative border border-[var(--cyan)]/30 bg-[var(--dark)]/60 p-6 group hover:border-[var(--pink)]/60 transition-colors"
+              style={{ boxShadow: "0 0 20px rgba(0,229,255,0.05)" }}>
+              <span className="absolute -top-px -left-px w-4 h-4 border-t-2 border-l-2 border-[var(--pink)]"></span>
+              <span className="absolute -top-px -right-px w-4 h-4 border-t-2 border-r-2 border-[var(--pink)]"></span>
+              <span className="absolute -bottom-px -left-px w-4 h-4 border-b-2 border-l-2 border-[var(--pink)]"></span>
+              <span className="absolute -bottom-px -right-px w-4 h-4 border-b-2 border-r-2 border-[var(--pink)]"></span>
+
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-12 h-12 border border-[var(--cyan)]/40 flex items-center justify-center flex-shrink-0 overflow-hidden bg-[var(--surface)]">
+                  {cert.image_url
+                    ? <img src={cert.image_url} alt={cert.issuer} className="w-full h-full object-contain p-1" />
+                    : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M8 14l-2 7 6-3 6 3-2-7"/></svg>
+                  }
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-display text-xl tracking-wider text-[var(--text)] leading-tight group-hover:text-[var(--pink)] transition-colors">{cert.name}</div>
+                  {cert.issuer && <div className="text-[10px] tracking-[0.25em] text-[var(--cyan)] mt-1">{cert.issuer}</div>}
+                </div>
+              </div>
+
+              {cert.issue_date && (
+                <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/40 mb-4">
+                  <span className="text-[var(--pink)]">▍</span> {cert.issue_date}
+                </div>
+              )}
+
+              {cert.credential_url && (
+                <a href={cert.credential_url} target="_blank" rel="noopener noreferrer"
+                  className="hover-target inline-flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase border border-[var(--cyan)]/40 px-3 py-2 text-[var(--cyan)] hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all">
+                  VER CREDENCIAL ↗
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// VIDEOS
+// ────────────────────────────────────────────────────────────────────────────
+function VideosSection({ videos }) {
+  if (!videos || videos.length === 0) return null;
+
+  useEffect(() => {
+    gsap.from(".video-card", {
+      scrollTrigger: { trigger: "#videos", start: "top 75%" },
+      y: 60, opacity: 0, stagger: 0.15, duration: 0.8, ease: "power3.out",
+    });
+    gsap.from(".videos-header", {
+      scrollTrigger: { trigger: "#videos", start: "top 85%" },
+      y: 30, opacity: 0, duration: 0.7, ease: "power3.out",
+    });
+  }, [videos.length]);
+
+  return (
+    <section id="videos" className="relative py-32 px-6 md:px-12 bg-[var(--dark)] overflow-hidden grid-bg">
+      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
+        background: "radial-gradient(circle at 30% 60%, rgba(255,45,120,0.15) 0%, transparent 50%)"
+      }}></div>
+
+      <div className="relative max-w-7xl mx-auto">
+        <div className="videos-header flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6">
+          <div>
+            <div className="section-tag mb-4">// Demos_En_Vivo</div>
+            <h2 className="font-display text-5xl md:text-7xl leading-[0.95]">
+              <span className="neon-pink">Videos</span><br/>
+              <span className="text-[var(--text)]">& Demos.</span>
+            </h2>
+          </div>
+          <div className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 max-w-xs">
+            <div className="text-[var(--cyan)] mb-2">// SIGNAL.TRANSMITIDO</div>
+            Proyectos en acción. Demos reales, sin edición.
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-10">
+          {videos.map((video, i) => (
+            <div key={video.id || i} className="video-card relative border border-[var(--pink)]/30 bg-[var(--surface)]/40">
+              <span className="absolute -top-px -left-px w-5 h-5 border-t-2 border-l-2 border-[var(--cyan)] z-10"></span>
+              <span className="absolute -top-px -right-px w-5 h-5 border-t-2 border-r-2 border-[var(--cyan)] z-10"></span>
+              <span className="absolute -bottom-px -left-px w-5 h-5 border-b-2 border-l-2 border-[var(--cyan)] z-10"></span>
+              <span className="absolute -bottom-px -right-px w-5 h-5 border-b-2 border-r-2 border-[var(--cyan)] z-10"></span>
+
+              <div className="p-4 border-b border-[var(--text)]/10 flex items-center justify-between">
+                <div>
+                  <div className="font-display text-xl tracking-wider text-[var(--text)]">{video.title}</div>
+                  {video.description && <div className="text-[10px] tracking-[0.2em] text-[var(--text)]/50 mt-1">{video.description}</div>}
+                </div>
+                <div className="flex items-center gap-2 text-[10px] tracking-[0.3em] text-[var(--pink)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--pink)] animate-pulse"></span>
+                  REC
+                </div>
+              </div>
+
+              <div className="relative" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  src={video.embed_url}
+                  title={video.title}
+                  className="absolute inset-0 w-full h-full border-0"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                />
+                <div className="absolute inset-0 pointer-events-none z-[2]" style={{
+                  background: "repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px)",
+                  mixBlendMode: "overlay"
+                }}></div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -1030,6 +1618,7 @@ async function validateEmailDomain(email) {
 }
 
 function ContactSection() {
+  const { t } = useLang();
   const [form, setForm] = useState({ name: "", email: "", project: "", msg: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -1073,7 +1662,7 @@ function ContactSection() {
     const emailOk = await validateEmailDomain(form.email);
     setEmailValidating(false);
     if (!emailOk) {
-      setFormError("◢ El dominio del email no existe. Verificá que sea un email real.");
+      setFormError(t('contact.err1'));
       setSending(false);
       return;
     }
@@ -1089,7 +1678,7 @@ function ContactSection() {
       gsap.fromTo(".success-glow", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" });
       setTimeout(() => setSent(false), 4000);
     } catch {
-      setFormError("◢ Error al enviar. Intentá de nuevo o escribime directo a ivanneira2015@gmail.com");
+      setFormError(t('contact.err2'));
     } finally {
       setSending(false);
     }
@@ -1103,14 +1692,13 @@ function ContactSection() {
 
       <div className="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-start">
         <div className="contact-left">
-          <div className="section-tag mb-6">04 // Canal_Abierto</div>
+          <div className="section-tag mb-6">{t('contact.tag')}</div>
           <h2 className="font-display text-5xl md:text-7xl leading-[0.95] mb-8">
-            Hablemos del <span className="neon-pink">próximo</span><br/>
-            <span className="neon-cyan glitch" data-text="proyecto.">proyecto.</span>
+            {t('contact.h2a')} <span className="neon-pink">{t('contact.h2b')}</span><br/>
+            <span className="neon-cyan glitch" data-text={t('contact.h2c')}>{t('contact.h2c')}</span>
           </h2>
           <p className="text-[var(--text)]/70 text-sm md:text-base leading-relaxed mb-10 max-w-md">
-            ¿Tenés un proyecto, una idea, o necesitás un dev full stack que entregue?
-            Mandame un mensaje. Respondo todos los emails en menos de <span className="text-[var(--cyan)]">24h</span>.
+            {t('contact.desc')} <span className="text-[var(--cyan)]">24h</span>.
           </p>
 
           <div className="space-y-4 text-xs">
@@ -1141,7 +1729,7 @@ function ContactSection() {
                 <span className="text-[var(--text)] group-hover:text-[var(--pink)] transition-colors">@ivanneira2015-hash</span>
               </div>
             </a>
-            <a href="#" className="flex items-center gap-4 group hover-target">
+            <a href="https://www.linkedin.com/in/walter-ivan-neira-astuena" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group hover-target">
               <span className="w-9 h-9 border border-[var(--text)]/20 flex items-center justify-center text-[var(--cyan)] group-hover:border-[var(--pink)] group-hover:text-[var(--pink)] transition-colors flex-shrink-0">
                 <Icon name="linkedin" size={16} />
               </span>
@@ -1170,21 +1758,21 @@ function ContactSection() {
 
             <div className="space-y-5">
               <div>
-                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ NOMBRE *</label>
+                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">{t('contact.fn')}</label>
                 <input
                   className="cyber-input"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Tu nombre"
+                  placeholder={t('contact.pn')}
                 />
               </div>
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50">/ EMAIL *</label>
+                  <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50">{t('contact.fe')}</label>
                   {emailValidating && (
                     <span className="text-[9px] tracking-[0.3em] text-[var(--cyan)] flex items-center gap-1.5">
                       <span className="w-2 h-2 border border-[var(--cyan)] border-t-transparent rounded-full animate-spin inline-block"></span>
-                      VERIFICANDO
+                      {t('contact.verify')}
                     </span>
                   )}
                 </div>
@@ -1193,33 +1781,33 @@ function ContactSection() {
                   className="cyber-input"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="vos@empresa.com"
+                  placeholder={t('contact.pe')}
                 />
               </div>
               <div>
-                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ TIPO_DE_PROYECTO</label>
+                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">{t('contact.fp')}</label>
                 <select
                   className="cyber-input"
                   value={form.project}
                   onChange={(e) => setForm({ ...form, project: e.target.value })}
                   style={{ appearance: "none", backgroundImage: "linear-gradient(45deg, transparent 50%, #00E5FF 50%), linear-gradient(135deg, #00E5FF 50%, transparent 50%)", backgroundPosition: "calc(100% - 18px) 50%, calc(100% - 12px) 50%", backgroundSize: "6px 6px, 6px 6px", backgroundRepeat: "no-repeat" }}
                 >
-                  <option value="">— Seleccionar tipo —</option>
-                  <option>Web / Landing</option>
-                  <option>App / Plataforma</option>
-                  <option>API / Backend</option>
-                  <option>Full Stack End-to-End</option>
-                  <option>Consultoría / IT</option>
+                  <option value="">{t('contact.sel')}</option>
+                  <option>{t('contact.o1')}</option>
+                  <option>{t('contact.o2')}</option>
+                  <option>{t('contact.o3')}</option>
+                  <option>{t('contact.o4')}</option>
+                  <option>{t('contact.o5')}</option>
                 </select>
               </div>
               <div>
-                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ MENSAJE *</label>
+                <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">{t('contact.fm')}</label>
                 <textarea
                   className="cyber-input"
                   rows="4"
                   value={form.msg}
                   onChange={(e) => setForm({ ...form, msg: e.target.value })}
-                  placeholder="Contame qué tenés en mente..."
+                  placeholder={t('contact.pm')}
                 ></textarea>
               </div>
 
@@ -1230,11 +1818,11 @@ function ContactSection() {
                 style={{ background: sent ? "var(--cyan)" : sending ? "rgba(255,45,120,0.6)" : undefined }}
               >
                 {sent ? (
-                  <span className="success-glow inline-flex items-center gap-3">✓ MENSAJE_ENVIADO</span>
+                  <span className="success-glow inline-flex items-center gap-3">{t('contact.sent')}</span>
                 ) : sending ? (
-                  <span className="inline-flex items-center gap-3">ENVIANDO...</span>
+                  <span className="inline-flex items-center gap-3">{t('contact.sending')}</span>
                 ) : (
-                  <span>ENVIAR ⌁</span>
+                  <span>{t('contact.btn')}</span>
                 )}
               </button>
 
@@ -1243,7 +1831,7 @@ function ContactSection() {
               )}
 
               <div className="text-[9px] tracking-[0.3em] text-[var(--text)]/30 text-center pt-2">
-                ◢ RESPUESTA EN &lt; 24H · SIN SPAM
+                {t('contact.spam')}
               </div>
             </div>
           </form>
@@ -1256,7 +1844,7 @@ function ContactSection() {
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse"></span>
           SYS.UPTIME 99.97%
         </div>
-        <div>HECHO CON CÓDIGO · ARGENTINA_2026</div>
+        <div>{t('footer.made')}</div>
       </footer>
     </section>
   );
@@ -1270,6 +1858,10 @@ const ADMIN_USER_HASH = "4748d4c802a775e8db9a23ec58f0986cacdc5d2d3356d22c490a7d2
 const ADMIN_PASS_HASH = "054073fb0492595ae30da7544f8b4244fab743e27f2f92d2a194a1fc242adc7d";
 const STORAGE_KEY = "nivaro_projects";
 const AUTH_KEY = "nivaro_admin_session";
+const CERTS_KEY = "nivaro_certifications";
+const VIDEOS_KEY = "nivaro_videos";
+const CV_KEY = "nivaro_cv_url";
+const CV_EN_KEY = "nivaro_cv_url_en";
 
 async function sha256(str) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
@@ -1439,13 +2031,19 @@ function AdminButton({ onClick, isOpen }) {
   );
 }
 
-function AdminPanel({ projects, setProjects, onClose }) {
+function AdminPanel({ projects, setProjects, certs, setCerts, videos, setVideos, cvUrl, setCvUrl, cvUrlEn, setCvUrlEn, onClose }) {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem(AUTH_KEY) === "true");
   const [loginUser, setLoginUser] = useState("");
   const [pwd, setPwd] = useState("");
   const [pwdError, setPwdError] = useState(false);
-  const [editing, setEditing] = useState(null); // index | "new" | null
+  const [editing, setEditing] = useState(null);
   const [draft, setDraft] = useState(null);
+  const [editingCert, setEditingCert] = useState(null);
+  const [draftCert, setDraftCert] = useState(null);
+  const [editingVideo, setEditingVideo] = useState(null);
+  const [draftVideo, setDraftVideo] = useState(null);
+  const [cvDraft, setCvDraft] = useState(cvUrl || "");
+  const [cvEnDraft, setCvEnDraft] = useState(cvUrlEn || "");
   const [toast, setToast] = useState("");
   const [adminTab, setAdminTab] = useState("projects");
   const panelRef = useRef(null);
@@ -1816,8 +2414,8 @@ function AdminPanel({ projects, setProjects, onClose }) {
       </header>
 
       <div className="border-b border-[var(--text)]/10">
-        <div className="flex">
-          {[["projects", "PROYECTOS"], ["inbox", "INBOX"]].map(([tab, label]) => (
+        <div className="flex overflow-x-auto">
+          {[["projects", "PROY"], ["certs", "CERTS"], ["videos", "VIDS"], ["cv", "CV"], ["inbox", "INBOX"]].map(([tab, label]) => (
             <button
               key={tab}
               onClick={() => setAdminTab(tab)}
@@ -1834,8 +2432,7 @@ function AdminPanel({ projects, setProjects, onClose }) {
         {adminTab === "projects" && (
           <div className="px-5 py-3 flex items-center gap-2">
             <button onClick={startNew} className="hover-target flex-1 flex items-center justify-center gap-2 py-2.5 bg-[var(--pink)] text-[var(--dark)] font-display tracking-widest text-sm hover:bg-[var(--cyan)] transition-colors">
-              <Icon name="plus" size={16} />
-              NUEVO
+              <Icon name="plus" size={16} />NUEVO
             </button>
             <button onClick={exportJSON} title="Exportar JSON" className="hover-target w-10 h-10 border border-[var(--text)]/20 flex items-center justify-center text-[var(--text)]/70 hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors">
               <Icon name="download" size={16} />
@@ -1845,9 +2442,27 @@ function AdminPanel({ projects, setProjects, onClose }) {
             </button>
           </div>
         )}
+        {adminTab === "certs" && (
+          <div className="px-5 py-3">
+            <button onClick={() => { setEditingCert("new"); setDraftCert({ id: Date.now().toString(), name: "", issuer: "", issue_date: "", credential_url: "", image_url: "" }); }}
+              className="hover-target w-full flex items-center justify-center gap-2 py-2.5 bg-[var(--pink)] text-[var(--dark)] font-display tracking-widest text-sm hover:bg-[var(--cyan)] transition-colors">
+              <Icon name="plus" size={16} />NUEVA CERT
+            </button>
+          </div>
+        )}
+        {adminTab === "videos" && (
+          <div className="px-5 py-3">
+            <button onClick={() => { setEditingVideo("new"); setDraftVideo({ id: Date.now().toString(), title: "", description: "", embed_url: "" }); }}
+              className="hover-target w-full flex items-center justify-center gap-2 py-2.5 bg-[var(--pink)] text-[var(--dark)] font-display tracking-widest text-sm hover:bg-[var(--cyan)] transition-colors">
+              <Icon name="plus" size={16} />NUEVO VIDEO
+            </button>
+          </div>
+        )}
       </div>
 
-      {adminTab === "inbox" ? <InboxView /> : (
+      {adminTab === "inbox" && <InboxView />}
+
+      {adminTab === "projects" && (
         <div className="flex-1 overflow-y-auto p-5 space-y-3">
           {projects.length === 0 && (
             <div className="text-center py-12 text-[var(--text)]/40 text-xs tracking-widest">
@@ -1883,6 +2498,155 @@ function AdminPanel({ projects, setProjects, onClose }) {
         </div>
       )}
 
+      {adminTab === "certs" && !editingCert && (
+        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+          {certs.length === 0 && (
+            <div className="text-center py-12 text-[var(--text)]/40 text-xs tracking-widest">
+              ◢ NO HAY CERTIFICACIONES<br/><br/>
+              <button onClick={() => { setEditingCert("new"); setDraftCert({ id: Date.now().toString(), name: "", issuer: "", issue_date: "", credential_url: "", image_url: "" }); }}
+                className="hover-target text-[var(--cyan)] underline">Agregar la primera →</button>
+            </div>
+          )}
+          {certs.map((c, i) => (
+            <div key={c.id || i} className="border border-[var(--text)]/15 bg-[var(--surface)]/50 p-3 flex items-center gap-3 hover:border-[var(--pink)]/40 transition-colors">
+              <div className="w-10 h-10 border border-[var(--cyan)]/30 flex items-center justify-center flex-shrink-0 bg-[var(--surface)] overflow-hidden">
+                {c.image_url ? <img src={c.image_url} alt="" className="w-full h-full object-contain p-1" /> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M8 14l-2 7 6-3 6 3-2-7"/></svg>}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-display text-sm tracking-wider truncate text-[var(--text)]">{c.name}</div>
+                <div className="text-[10px] tracking-widest text-[var(--cyan)] truncate">{c.issuer} {c.issue_date ? `· ${c.issue_date}` : ""}</div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <button onClick={() => { setEditingCert(i); setDraftCert({ ...c }); }} className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--cyan)] hover:border-[var(--cyan)] transition-colors">
+                  <Icon name="edit" size={14} />
+                </button>
+                <button onClick={() => { const next = certs.filter((_, j) => j !== i); setCerts(next); localStorage.setItem(CERTS_KEY, JSON.stringify(next)); showToast("✓ Eliminada"); }}
+                  className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--pink)] hover:border-[var(--pink)] transition-colors">
+                  <Icon name="trash" size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {adminTab === "certs" && editingCert !== null && (
+        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)]">{editingCert === "new" ? "/NUEVA CERT" : "/EDITAR CERT"}</div>
+            <button onClick={() => { setEditingCert(null); setDraftCert(null); }} className="hover-target text-[var(--text)]/50 hover:text-[var(--pink)]"><Icon name="close" size={18} /></button>
+          </div>
+          {[["name","Nombre *",""],["issuer","Institución","Ej: Fundación Formar"],["issue_date","Fecha","Ej: Mayo 2026"],["credential_url","URL Credencial","https://..."],["image_url","URL Logo/Imagen","https://..."]].map(([field, label, ph]) => (
+            <div key={field}>
+              <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ {label.toUpperCase()}</label>
+              <input className="cyber-input" value={draftCert[field] || ""} onChange={e => setDraftCert({ ...draftCert, [field]: e.target.value })} placeholder={ph} />
+            </div>
+          ))}
+          <div className="flex gap-2 pt-2">
+            <button onClick={() => { setEditingCert(null); setDraftCert(null); }} className="hover-target flex-1 py-3 border border-[var(--text)]/20 text-[11px] tracking-[0.3em] hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors">CANCELAR</button>
+            <button onClick={() => {
+              if (!draftCert.name.trim()) return showToast("◢ Nombre requerido");
+              let next;
+              if (editingCert === "new") next = [...certs, draftCert];
+              else { next = [...certs]; next[editingCert] = draftCert; }
+              setCerts(next); localStorage.setItem(CERTS_KEY, JSON.stringify(next));
+              setEditingCert(null); setDraftCert(null); showToast("✓ Guardada");
+            }} className="hover-target flex-1 py-3 bg-[var(--cyan)] text-[var(--dark)] font-display tracking-[0.3em] hover:bg-[var(--pink)] transition-colors flex items-center justify-center gap-2">
+              <Icon name="save" size={16} />GUARDAR
+            </button>
+          </div>
+        </div>
+      )}
+
+      {adminTab === "videos" && !editingVideo && (
+        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+          {videos.length === 0 && (
+            <div className="text-center py-12 text-[var(--text)]/40 text-xs tracking-widest">
+              ◢ NO HAY VIDEOS<br/><br/>
+              <button onClick={() => { setEditingVideo("new"); setDraftVideo({ id: Date.now().toString(), title: "", description: "", embed_url: "" }); }}
+                className="hover-target text-[var(--cyan)] underline">Agregar el primero →</button>
+            </div>
+          )}
+          {videos.map((v, i) => (
+            <div key={v.id || i} className="border border-[var(--text)]/15 bg-[var(--surface)]/50 p-3 flex items-center gap-3 hover:border-[var(--pink)]/40 transition-colors">
+              <div className="w-10 h-10 border border-[var(--pink)]/30 flex items-center justify-center flex-shrink-0 bg-[var(--surface)]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-display text-sm tracking-wider truncate text-[var(--text)]">{v.title}</div>
+                <div className="text-[10px] tracking-widest text-[var(--text)]/40 truncate">{v.embed_url}</div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <button onClick={() => { setEditingVideo(i); setDraftVideo({ ...v }); }} className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--cyan)] hover:border-[var(--cyan)] transition-colors">
+                  <Icon name="edit" size={14} />
+                </button>
+                <button onClick={() => { const next = videos.filter((_, j) => j !== i); setVideos(next); localStorage.setItem(VIDEOS_KEY, JSON.stringify(next)); showToast("✓ Eliminado"); }}
+                  className="hover-target w-8 h-8 border border-[var(--text)]/20 flex items-center justify-center text-[var(--pink)] hover:border-[var(--pink)] transition-colors">
+                  <Icon name="trash" size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {adminTab === "videos" && editingVideo !== null && (
+        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)]">{editingVideo === "new" ? "/NUEVO VIDEO" : "/EDITAR VIDEO"}</div>
+            <button onClick={() => { setEditingVideo(null); setDraftVideo(null); }} className="hover-target text-[var(--text)]/50 hover:text-[var(--pink)]"><Icon name="close" size={18} /></button>
+          </div>
+          {[["title","Título *",""],["description","Descripción","Demo del proyecto..."],["embed_url","URL Embed *","https://www.youtube.com/embed/VIDEO_ID"]].map(([field, label, ph]) => (
+            <div key={field}>
+              <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ {label.toUpperCase()}</label>
+              {field === "description"
+                ? <textarea className="cyber-input" rows="3" value={draftVideo[field] || ""} onChange={e => setDraftVideo({ ...draftVideo, [field]: e.target.value })} placeholder={ph} />
+                : <input className="cyber-input" value={draftVideo[field] || ""} onChange={e => setDraftVideo({ ...draftVideo, [field]: e.target.value })} placeholder={ph} />
+              }
+            </div>
+          ))}
+          <p className="text-[9px] tracking-[0.25em] text-[var(--text)]/35 leading-relaxed">◢ YouTube: Share → Embed → copiá la URL del src (ej: https://www.youtube.com/embed/ID)</p>
+          <div className="flex gap-2 pt-2">
+            <button onClick={() => { setEditingVideo(null); setDraftVideo(null); }} className="hover-target flex-1 py-3 border border-[var(--text)]/20 text-[11px] tracking-[0.3em] hover:border-[var(--pink)] hover:text-[var(--pink)] transition-colors">CANCELAR</button>
+            <button onClick={() => {
+              if (!draftVideo.title.trim() || !draftVideo.embed_url.trim()) return showToast("◢ Título y URL requeridos");
+              let next;
+              if (editingVideo === "new") next = [...videos, draftVideo];
+              else { next = [...videos]; next[editingVideo] = draftVideo; }
+              setVideos(next); localStorage.setItem(VIDEOS_KEY, JSON.stringify(next));
+              setEditingVideo(null); setDraftVideo(null); showToast("✓ Guardado");
+            }} className="hover-target flex-1 py-3 bg-[var(--cyan)] text-[var(--dark)] font-display tracking-[0.3em] hover:bg-[var(--pink)] transition-colors flex items-center justify-center gap-2">
+              <Icon name="save" size={16} />GUARDAR
+            </button>
+          </div>
+        </div>
+      )}
+
+      {adminTab === "cv" && (
+        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+          <div className="text-[10px] tracking-[0.3em] text-[var(--cyan)] mb-2">/ CV.ACTUALIZAR</div>
+          <p className="text-xs text-[var(--text)]/60 leading-relaxed">Pegá las URLs de los PDFs. Los botones CV·ES y CV·EN en el hero usarán estas URLs.</p>
+          <div className="space-y-1">
+            <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ CV ESPAÑOL (URL PDF)</label>
+            <input className="cyber-input" value={cvDraft} onChange={e => setCvDraft(e.target.value)} placeholder="https://drive.google.com/file/..." />
+            {cvUrl && <p className="text-[10px] tracking-[0.3em] text-[var(--text)]/40">ACTUAL: <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="hover-target text-[var(--cyan)] underline">ver ES</a></p>}
+          </div>
+          <div className="space-y-1">
+            <label className="text-[10px] tracking-[0.3em] text-[var(--text)]/50 mb-2 block">/ CV INGLÉS (URL PDF)</label>
+            <input className="cyber-input" value={cvEnDraft} onChange={e => setCvEnDraft(e.target.value)} placeholder="https://drive.google.com/file/..." />
+            {cvUrlEn && <p className="text-[10px] tracking-[0.3em] text-[var(--text)]/40">ACTUAL: <a href={cvUrlEn} target="_blank" rel="noopener noreferrer" className="hover-target text-[var(--cyan)] underline">ver EN</a></p>}
+            <p className="text-[9px] tracking-[0.2em] text-[var(--text)]/35">◢ Si dejás vacío, el botón EN usa el mismo PDF que ES.</p>
+          </div>
+          <button onClick={() => { setCvUrl(cvDraft); localStorage.setItem(CV_KEY, cvDraft); setCvUrlEn(cvEnDraft); localStorage.setItem(CV_EN_KEY, cvEnDraft); showToast("✓ CVs actualizados"); }}
+            className="hover-target w-full py-3 bg-[var(--cyan)] text-[var(--dark)] font-display tracking-[0.3em] hover:bg-[var(--pink)] transition-colors flex items-center justify-center gap-2">
+            <Icon name="save" size={16} />GUARDAR AMBAS URLs
+          </button>
+          <div className="border-t border-[var(--text)]/10 pt-4">
+            <p className="text-[9px] tracking-[0.25em] text-[var(--text)]/35 leading-relaxed">◢ Si dejás vacío, se usa el PDF que está en uploads/ del proyecto.<br/>Para Google Drive: Archivo → Compartir → "Cualquiera con el enlace" → copiar link directo.</p>
+          </div>
+        </div>
+      )}
+
       <footer className="p-4 border-t border-[var(--text)]/10 flex items-center justify-between text-[10px] tracking-widest">
         <span className="text-[var(--text)]/40">LOCAL_STORAGE_ONLY</span>
         <button onClick={handleLogout} className="hover-target flex items-center gap-2 text-[var(--text)]/60 hover:text-[var(--pink)] transition-colors">
@@ -1904,7 +2668,26 @@ function AdminPanel({ projects, setProjects, onClose }) {
 // APP
 // ────────────────────────────────────────────────────────────────────────────
 function App() {
+  const [lang, setLangState] = useState(() => localStorage.getItem('nivaro_lang') || 'es');
+  const setLang = (l) => { setLangState(l); localStorage.setItem('nivaro_lang', l); };
+  const t = (key) => (T[lang]?.[key]) ?? (T.es[key] ?? key);
+  const langCtx = { lang, setLang, t };
+
   const [adminOpen, setAdminOpen] = useState(false);
+
+  const [certs, setCertsState] = useState(() => {
+    try { const s = localStorage.getItem(CERTS_KEY); const p = JSON.parse(s); return Array.isArray(p) ? p : []; } catch { return []; }
+  });
+  const [videos, setVideosState] = useState(() => {
+    try { const s = localStorage.getItem(VIDEOS_KEY); const p = JSON.parse(s); return Array.isArray(p) ? p : []; } catch { return []; }
+  });
+  const [cvUrl, setCvUrlState] = useState(() => localStorage.getItem(CV_KEY) || "");
+  const [cvUrlEn, setCvUrlEnState] = useState(() => localStorage.getItem(CV_EN_KEY) || "");
+
+  const updateCerts = (next) => { setCertsState(next); localStorage.setItem(CERTS_KEY, JSON.stringify(next)); };
+  const updateVideos = (next) => { setVideosState(next); localStorage.setItem(VIDEOS_KEY, JSON.stringify(next)); };
+  const updateCvUrl = (val) => { setCvUrlState(val); localStorage.setItem(CV_KEY, val); };
+  const updateCvUrlEn = (val) => { setCvUrlEnState(val); localStorage.setItem(CV_EN_KEY, val); };
 
   // Unified projects state — starts from localStorage, merges manifest on load
   const [projects, setProjectsState] = useState(() => {
@@ -1942,23 +2725,35 @@ function App() {
   const displayProjects = projects || DEFAULT_PROJECTS;
 
   return (
-    <div className="relative bg-[var(--dark)] text-[var(--text)]">
-      <Cursor />
-      <Nav />
-      <HeroSection />
-      <AboutSection />
-      <ProjectsSection projects={displayProjects} />
-      <BuildSection />
-      <ContactSection />
-      {!adminOpen && <AdminButton onClick={() => setAdminOpen(true)} isOpen={false} />}
-      {adminOpen && (
-        <AdminPanel
-          projects={displayProjects}
-          setProjects={updateProjects}
-          onClose={() => setAdminOpen(false)}
-        />
-      )}
-    </div>
+    <LangContext.Provider value={langCtx}>
+      <div className="relative bg-[var(--dark)] text-[var(--text)]">
+        <Cursor />
+        <Nav hasCerts={certs.length > 0} hasVideos={videos.length > 0} />
+        <HeroSection cvUrl={cvUrl} cvUrlEn={cvUrlEn} />
+        <AboutSection cvUrlEn={cvUrlEn} />
+        <ProjectsSection projects={displayProjects} />
+        <CertificationsSection certs={certs} />
+        <VideosSection videos={videos} />
+        <BuildSection />
+        <ContactSection />
+        {!adminOpen && <AdminButton onClick={() => setAdminOpen(true)} isOpen={false} />}
+        {adminOpen && (
+          <AdminPanel
+            projects={displayProjects}
+            setProjects={updateProjects}
+            certs={certs}
+            setCerts={updateCerts}
+            videos={videos}
+            setVideos={updateVideos}
+            cvUrl={cvUrl}
+            setCvUrl={updateCvUrl}
+            cvUrlEn={cvUrlEn}
+            setCvUrlEn={updateCvUrlEn}
+            onClose={() => setAdminOpen(false)}
+          />
+        )}
+      </div>
+    </LangContext.Provider>
   );
 }
 
