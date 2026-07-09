@@ -1924,13 +1924,52 @@ function ContactSection() {
         </div>
       </div>
 
-      <footer className="relative mt-32 pt-8 border-t border-[var(--text)]/10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] tracking-[0.3em] text-[var(--text)]/40">
-        <div>© 2026 NIVARO · WALTER_NEIRA</div>
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse"></span>
-          SYS.UPTIME 99.97%
+      <footer className="relative mt-32 pt-8 border-t border-[var(--text)]/10 max-w-6xl mx-auto text-[10px] tracking-[0.3em] text-[var(--text)]/40">
+        {/* Top row */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+          <div>© 2026 NIVARO · WALTER_NEIRA</div>
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse"></span>
+            SYS.UPTIME 99.97%
+          </div>
+          <div>{t('footer.made')}</div>
         </div>
-        <div>{t('footer.made')}</div>
+
+        {/* NivaroEnterprise divider row */}
+        <div className="border-t border-[var(--text)]/8 pt-7 flex flex-col sm:flex-row items-center justify-between gap-5">
+          <a
+            href="https://nivaroenterprise.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover-target flex items-center gap-3 group opacity-50 hover:opacity-100 transition-opacity"
+          >
+            <div style={{ filter: "drop-shadow(0 0 8px rgba(53,37,205,0.5))" }}>
+              <svg width="34" height="34" viewBox="0 0 34 34">
+                <rect width="34" height="34" rx="7" fill="#3525CD"/>
+                <line x1="9" y1="25" x2="9" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                <line x1="9" y1="9" x2="25" y2="25" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                <line x1="25" y1="25" x2="25" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+                <circle cx="17" cy="17" r="2" fill="#C9A84C"/>
+              </svg>
+            </div>
+            <div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display text-base tracking-[0.15em] text-[var(--text)]/70 group-hover:text-[var(--text)] transition-colors">NIVARO</span>
+                <span className="font-display text-base tracking-[0.15em] transition-colors" style={{ color: "#6B5FE8" }}>ENTERPRISE</span>
+              </div>
+              <div className="text-[8px] tracking-[0.4em] text-[var(--text)]/35 mt-0.5">SOFTWARE STUDIO · ARGENTINA · 2024</div>
+            </div>
+          </a>
+
+          <a
+            href="https://nivaroenterprise.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover-target text-[9px] tracking-[0.35em] uppercase border border-[var(--text)]/15 px-4 py-2 text-[var(--text)]/40 hover:border-[var(--text)]/40 hover:text-[var(--text)]/70 transition-all"
+          >
+            VER EMPRESA ↗
+          </a>
+        </div>
       </footer>
     </section>
   );
@@ -2816,7 +2855,6 @@ function App() {
         <Cursor />
         <Nav hasCerts={certs.length > 0} hasVideos={videos.length > 0} />
         <HeroSection cvUrl={cvUrl} cvUrlEn={cvUrlEn} />
-        <CompanyBand />
         <AboutSection cvUrlEn={cvUrlEn} />
         <ProjectsSection projects={displayProjects} />
         <CertificationsSection certs={certs} />
