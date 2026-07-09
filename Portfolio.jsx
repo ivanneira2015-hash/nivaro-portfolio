@@ -479,8 +479,8 @@ function Nav({ hasCerts = false, hasVideos = false }) {
 // ────────────────────────────────────────────────────────────────────────────
 function HeroSection({ cvUrl, cvUrlEn }) {
   const { t } = useLang();
-  const cvHref = cvUrl || "uploads/Full_Stack_Developer_walter_neira.pdf";
-  const cvHrefEn = cvUrlEn || cvHref;
+  const cvHref = cvUrl || "Full_Stack_Developer_walter_neira.pdf";
+  const cvHrefEn = cvUrlEn || "Full_Stack_Developer_WN_EN.pdf";
   const subtitleRef = useRef(null);
   const ctaRef = useRef(null);
   const bgRef = useRef(null);
@@ -627,11 +627,97 @@ function HeroSection({ cvUrl, cvUrlEn }) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// COMPANY BAND — NivaroEnterprise marquee strip
+// ────────────────────────────────────────────────────────────────────────────
+function CompanyBand() {
+  const REPEAT = 6;
+  const chunks = Array(REPEAT).fill(
+    "NIVAROENTERPRISE · SOFTWARE STUDIO · ARGENTINA · REACT · NODE.JS · FULL STACK · END-TO-END · "
+  );
+
+  return (
+    <div className="relative overflow-hidden" style={{
+      borderTop: "1px solid rgba(53,37,205,0.35)",
+      borderBottom: "1px solid rgba(53,37,205,0.35)",
+      background: "linear-gradient(90deg, rgba(53,37,205,0.12) 0%, rgba(10,10,15,0.95) 20%, rgba(10,10,15,0.95) 80%, rgba(53,37,205,0.12) 100%)",
+    }}>
+      {/* Glow line top */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(53,37,205,0.6) 30%, rgba(0,229,255,0.4) 50%, rgba(53,37,205,0.6) 70%, transparent)", boxShadow: "0 0 12px rgba(53,37,205,0.4)" }}></div>
+
+      {/* Scrolling marquee */}
+      <div className="overflow-hidden py-3" style={{ borderBottom: "1px solid rgba(255,45,120,0.08)" }}>
+        <div className="marquee-track text-[9px] tracking-[0.5em] text-[var(--text)]/20 select-none">
+          {chunks.map((chunk, i) => (
+            <span key={i} style={{ paddingRight: "2em" }}>{chunk}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* Main info row */}
+      <div className="flex items-center justify-between px-6 md:px-12 py-5">
+        {/* Left: logo + name + tagline */}
+        <a
+          href="https://nivaroenterprise.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover-target flex items-center gap-4 group"
+        >
+          <div className="relative flex-shrink-0" style={{ filter: "drop-shadow(0 0 10px rgba(53,37,205,0.6))" }}>
+            <svg width="46" height="46" viewBox="0 0 34 34">
+              <rect width="34" height="34" rx="8" fill="#3525CD"/>
+              <line x1="9" y1="25" x2="9" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+              <line x1="9" y1="9" x2="25" y2="25" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+              <line x1="25" y1="25" x2="25" y2="9" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
+              <circle cx="17" cy="17" r="2" fill="#C9A84C"/>
+            </svg>
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[var(--cyan)] animate-pulse" style={{ boxShadow: "0 0 6px var(--cyan)" }}></span>
+          </div>
+          <div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-2xl md:text-3xl tracking-[0.12em] leading-none text-[var(--text)] group-hover:text-[var(--text)] transition-colors">NIVARO</span>
+              <span className="font-display text-2xl md:text-3xl tracking-[0.12em] leading-none group-hover:opacity-100 transition-opacity" style={{ color: "#6B5FE8", textShadow: "0 0 20px rgba(53,37,205,0.6)" }}>ENTERPRISE</span>
+            </div>
+            <div className="text-[9px] tracking-[0.4em] text-[var(--text)]/40 mt-1 uppercase">Software Studio · Argentina · 2024</div>
+          </div>
+        </a>
+
+        {/* Center: service pills (hidden on small screens) */}
+        <div className="hidden lg:flex items-center gap-2">
+          {["Frontend", "Backend", "Full Stack", "IA"].map((s) => (
+            <span key={s} className="text-[9px] tracking-[0.3em] uppercase border border-[var(--text)]/15 px-3 py-1.5 text-[var(--text)]/40">
+              {s}
+            </span>
+          ))}
+        </div>
+
+        {/* Right: CTA */}
+        <a
+          href="https://nivaroenterprise.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover-target flex items-center gap-2 text-[10px] tracking-[0.35em] uppercase border px-5 py-3 transition-all group"
+          style={{ borderColor: "#3525CD", color: "#6B5FE8", boxShadow: "0 0 14px rgba(53,37,205,0.2)" }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "#3525CD"; e.currentTarget.style.color = "white"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#6B5FE8"; }}
+        >
+          <span className="hidden sm:inline">VER EMPRESA</span>
+          <span className="sm:hidden">EMPRESA</span>
+          <span>↗</span>
+        </a>
+      </div>
+
+      {/* Glow line bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(53,37,205,0.6) 30%, rgba(0,229,255,0.4) 50%, rgba(53,37,205,0.6) 70%, transparent)" }}></div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // SOBRE MÍ
 // ────────────────────────────────────────────────────────────────────────────
 function AboutSection({ cvUrlEn }) {
   const { t, lang } = useLang();
-  const cvHrefEn = cvUrlEn || "uploads/Full_Stack_Developer_walter_neira.pdf";
+  const cvHrefEn = cvUrlEn || "Full_Stack_Developer_WN_EN.pdf";
   const skills = [
     { name: "React",       pct: 92 },
     { name: "JavaScript",  pct: 90 },
@@ -844,7 +930,7 @@ function AboutSection({ cvUrlEn }) {
 
               <div className="mt-5 pt-5 border-t border-[var(--text)]/10 flex gap-2">
                 <a
-                  href="uploads/Full_Stack_Developer_walter_neira.pdf"
+                  href="Full_Stack_Developer_walter_neira.pdf"
                   download="Walter_Neira_CV.pdf"
                   className="hover-target flex items-center justify-center gap-2 flex-1 py-3 border border-[var(--cyan)]/60 text-[var(--cyan)] text-[10px] tracking-[0.3em] uppercase hover:bg-[var(--cyan)] hover:text-[var(--dark)] transition-all"
                   style={{ boxShadow: "0 0 14px rgba(0,229,255,0.15)" }}
@@ -2730,6 +2816,7 @@ function App() {
         <Cursor />
         <Nav hasCerts={certs.length > 0} hasVideos={videos.length > 0} />
         <HeroSection cvUrl={cvUrl} cvUrlEn={cvUrlEn} />
+        <CompanyBand />
         <AboutSection cvUrlEn={cvUrlEn} />
         <ProjectsSection projects={displayProjects} />
         <CertificationsSection certs={certs} />

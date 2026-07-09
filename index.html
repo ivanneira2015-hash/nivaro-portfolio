@@ -287,6 +287,19 @@
     @media (max-width: 768px) {
       a, button, input, textarea, .hover-target { cursor: auto; }
     }
+
+    /* Company band marquee */
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 28s linear infinite;
+      will-change: transform;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
   </style>
   <script
     src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js"
